@@ -18,7 +18,7 @@ CREATE TABLE Customer
 	customer_id int primary key,
     name varchar(50) not null,
     address varchar(50) not null,
-    phone_number int(10) not null,
+    phone_number int not null,
     legal_sex varchar (50) not null,
     date_of_birth date not null,
     user_id int not null,
@@ -32,7 +32,10 @@ CREATE TABLE RBorder
     order_status varchar(50) not null,
     order_completion_status varchar(50) not null,
     deliver_preference varchar(50) default 'ship',
-    operator_id int not null,    
+    operator_id int not null,
+    customer_id int not null,
+	CONSTRAINT order_foreign_customer FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+    ON DELETE CASCADE ON UPDATE RESTRICT,    
 	CONSTRAINT order_foreign_operator FOREIGN KEY (operator_id) REFERENCES Operator(operator_id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
@@ -62,7 +65,7 @@ CREATE TABLE Rbot_model
 
 CREATE TABLE Robot
 (
-	goods_id int(10) primary key,
+	goods_id int primary key,
     instock varchar(50) not null,
     produced_date date not null,
     software_edition varchar(50) default '0',
