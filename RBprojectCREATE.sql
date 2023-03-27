@@ -1,9 +1,9 @@
 DROP DATABASE IF EXISTS rbstore;
 CREATE DATABASE rbstore;
 USE rbstore;
-CREATE TABLE Salesperson
+CREATE TABLE Operator
 (
-	salesperson_id int primary key,
+	operator_id int primary key,
     name varchar(50) not null,
     address varchar(50) not null,
     phone_number int(10) not null,
@@ -73,13 +73,17 @@ CREATE TABLE Robot
 
 CREATE TABLE Order_detail
 (
-	order_id int primary key,
+	order_id int not null,
     goods_id int not null,
-    deal_price int not null,
+    sales_price int not null,
+    operator_id int not null,
+    primary key(order_id, goods_id),
     CONSTRAINT detail_foreign_order FOREIGN KEY (order_id) REFERENCES RBorder(order_id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT detail_foreign_good FOREIGN KEY (goods_id) REFERENCES Robot(goods_id)
-    ON DELETE CASCADE ON UPDATE RESTRICT
+    ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT detail_foreign_operator FOREIGN KEY (operator_id) REFERENCES Operator(operator_id)
+    ON DELETE CASCADE ON UPDATE RESTRICT 
 );
 
 
