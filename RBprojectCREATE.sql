@@ -40,7 +40,7 @@ CREATE TABLE RBorder
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-CREATE TABLE credit_card
+CREATE TABLE Credit_card
 (
 	card_number int primary key,
     type varchar(50) not null,
@@ -57,7 +57,7 @@ CREATE TABLE Software_edition
     release_date date not null
 );
 
-CREATE TABLE Rbot_model
+CREATE TABLE Rb_model
 (
 	model_id int primary key,
     model_name varchar(50) not null
@@ -88,11 +88,3 @@ CREATE TABLE Order_detail
 	CONSTRAINT detail_foreign_good FOREIGN KEY (goods_id) REFERENCES Robot(goods_id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
-
-
-
-
-
-
-
-
