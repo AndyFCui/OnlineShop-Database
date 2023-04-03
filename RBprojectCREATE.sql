@@ -10,8 +10,8 @@ CREATE TABLE operator
     phone_number int(10) not null,
     legal_sex varchar (50) not null,
     date_of_birth date not null,
-    user_id int not null,
-    user_password int not null
+    user_id varchar(50) not null,
+    user_password varchar(50) not null
 );
 DROP TABLE IF EXISTS customer;
 CREATE TABLE customer
