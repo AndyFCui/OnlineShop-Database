@@ -7,11 +7,11 @@ CREATE TABLE operator
 	operator_id int primary key,
     name varchar(50) not null,
     address varchar(50) not null,
-    phone_number int(10) not null,
+    phone_number varchar(50) not null,
     legal_sex varchar (50) not null,
     date_of_birth date not null,
-    user_id varchar(50) not null,
-    user_password varchar(50) not null
+    user_id varchar(50),
+    user_password varchar(50)
 );
 DROP TABLE IF EXISTS customer;
 CREATE TABLE customer
@@ -19,7 +19,7 @@ CREATE TABLE customer
 	customer_id int primary key,
     name varchar(50) not null,
     address varchar(50) not null,
-    phone_number int not null,
+    phone_number varchar(50) not null,
     legal_sex varchar (50) not null,
     date_of_birth date not null
 );
@@ -48,7 +48,7 @@ CREATE TABLE credit_card
     CONSTRAINT card_foreign_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
-DROP TABLE IF EXISTS credit_card;
+DROP TABLE IF EXISTS software_edition;
 CREATE TABLE software_edition
 (
 	edition varchar(50) primary key,
