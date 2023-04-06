@@ -6,11 +6,11 @@ CREATE TABLE Operator
 	operator_id int primary key,
     name varchar(50) not null,
     address varchar(50) not null,
-    phone_number VARCHAR(50) not null,
+    phone_number int(10) not null,
     legal_sex varchar (50) not null,
     date_of_birth date not null,
-    user_id VARCHAR(50) not null,
-    user_password VARCHAR(50) not null
+    user_id int not null,
+    user_password int not null
 );
 
 CREATE TABLE Customer
