@@ -51,19 +51,100 @@ BEGIN
 END//
 DELIMITER ;
 
+-- ##########################################################################
+-- ##########################################################################
 -- Create guest acount for creating account
 DROP PROCEDURE IF EXISTS default_account;
 DELIMITER $$
 CREATE PROCEDURE default_account() 
 BEGIN
+	-- Create user 
 	CREATE USER 'default_account'@'localhost' IDENTIFIED BY 'rbstore_guest';
-	GRANT CREATE USER ON *.* TO 'default_account'@'localhost';
+	-- Grant privileges
+    GRANT CREATE USER ON *.* TO 'default_account'@'localhost';
     GRANT SELECT ON *.* TO 'default_account'@'localhost';
     FLUSH PRIVILEGES;
+    
+    -- Insert the username into the user_info table
+    INSERT INTO operator_id VALUES ('default_account');
 END$$
 DELIMITER ;
 
 -- Test
 CALL default_account();
+
 SELECT user, host FROM mysql.user;
--- DROP USER 'default_account'@'localhost';
+SELECT * FROM Operator;
+DROP USER 'test'@'localhost';
+
+
+/*
+Sign up a new account. 
+*/
+-- Create the new user_id
+DROP PROCEDURE IF EXISTS create_account;
+
+DELIMITER $$
+CREATE PROCEDURE create_account(
+    IN user_id VARCHAR(50),
+    IN user_password VARCHAR(50),
+    IN operator_name VARCHAR(50),
+    IN operator_address VARCHAR(50),
+    IN operator_phone_number VARCHAR(50),
+    IN operator_legal_sex VARCHAR(50),
+    IN operator_date_of_birth DATE
+)
+BEGIN
+	DECLARE operator_no INT;
+    SELECT COUNT(*) FROM Operator INTO operator_no;
+    
+	-- Create user 
+    SET @sql = CONCAT(
+		"CREATE USER '", 
+        user_id, 
+        "'@'localhost' IDENTIFIED BY '", 
+        user_password, 
+        "';"
+        );
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+    
+    -- Grant privileges
+    SET @sql_grant = CONCAT("GRANT SELECT, INSERT, UPDATE, DELETE ON rbstore.* TO '", user_id, "'@'localhost';");
+    PREPARE stmt_grant FROM @sql_grant;
+    EXECUTE stmt_grant;
+    DEALLOCATE PREPARE stmt_grant;
+    
+	FLUSH PRIVILEGES;
+    
+    -- Insert the new user into the Operator table
+    INSERT INTO Operator (
+		operator_id,
+        name, 
+        address, 
+        phone_number, 
+        legal_sex, 
+        date_of_birth, 
+        user_id, 
+        user_password
+    ) VALUES (
+		operator_no,
+        operator_name, 
+        operator_address, 
+        operator_phone_number, 
+        operator_legal_sex, 
+        operator_date_of_birth, 
+        user_id, 
+        user_password
+    );
+END$$
+DELIMITER ;
+
+-- CALL create_account('andy', '123123')
+-- SHOW GRANTS FOR 'test'@'localhost';
+
+-- Check the user exist or not
+-- DROP FUNCTION IF EXISTS check_user();
+
+SHOW PROCEDURE STATUS where db = 'rbstore'
