@@ -98,6 +98,11 @@ class DatabaseConnection:
         return user_input
 
     @staticmethod
+    def welcome(user_name):
+        print("[%s] Welcome to use Robot Sale System" % user_name)
+        print("You have successfully logged in.")
+
+    @staticmethod
     def login(self):
         print("### Please Login With Your Username and Password ###")
         user_name = input("username: ")
@@ -108,8 +113,7 @@ class DatabaseConnection:
         self.cnx_connection()
 
         if self.status is True:
-            print("[%s] Welcome to use Robot Sale System" % user_name)
-            print("You have successfully logged in.")
+            self.welcome(user_name)
 
     def main(self):
         self.prompt_user_interface(self)
