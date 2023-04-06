@@ -79,7 +79,7 @@ DROP USER 'test'@'localhost';
 
 
 /*
-Sign up a new account. 
+Signup a new account. 
 */
 -- Create the new user_id
 DROP PROCEDURE IF EXISTS create_account;
@@ -96,7 +96,7 @@ CREATE PROCEDURE create_account(
 )
 BEGIN
 	DECLARE operator_no INT;
-    SELECT COUNT(*) FROM Operator INTO operator_no;
+    SELECT COUNT(*)+1 FROM Operator INTO operator_no;
     
 	-- Create user 
     SET @sql = CONCAT(
@@ -140,6 +140,41 @@ BEGIN
     );
 END$$
 DELIMITER ;
+-- ##################################################
+
+
+-- ##################################################
+-- # Delete account by operator_id                  #
+-- ##################################################
+DROP PROCEDURE IF EXISTS delete_account_by_operator_id;
+
+DELIMITER $$
+CREATE PROCEDURE delete_account_by_operator_id(IN target_operator_id INT)
+BEGIN
+    -- Find the corresponding user_id
+    DECLARE target_user_id VARCHAR(50);
+    SELECT user_id INTO target_user_id FROM Operator WHERE operator_id = target_operator_id;
+
+    -- Delete the record from the Operator table
+    DELETE FROM Operator WHERE operator_id = target_operator_id;
+
+    -- Drop the user
+    SET @sql = CONCAT(
+        "DROP USER '", 
+        target_user_id, 
+        "'@'localhost';"
+        );
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    FLUSH PRIVILEGES;
+END$$
+DELIMITER ;
+-- ##################################################
+
+
+CALL delete_account_by_operator_id(0);
 
 -- CALL create_account('andy', '123123')
 -- SHOW GRANTS FOR 'test'@'localhost';
@@ -147,4 +182,5 @@ DELIMITER ;
 -- Check the user exist or not
 -- DROP FUNCTION IF EXISTS check_user();
 
-SHOW PROCEDURE STATUS where db = 'rbstore'
+SHOW PROCEDURE STATUS where db = 'rbstore';
+SELECT * FROM Operator;

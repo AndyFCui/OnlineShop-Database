@@ -114,6 +114,15 @@ class DatabaseConnection:
 
         if self.status is True:
             self.welcome(user_name)
+            self.control_panel()
+
+    @staticmethod
+    def control_panel():
+        print('###########################################')
+        print('->[1] View Order                          #')
+        print('->[2] Return Order                        #')
+        print('->[3] View Order                          #')
+        print('###########################################')
 
     def main(self):
         self.prompt_user_interface(self)
