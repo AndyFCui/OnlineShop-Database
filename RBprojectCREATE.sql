@@ -64,7 +64,7 @@ CREATE TABLE robot_model
 DROP TABLE IF EXISTS robot;
 CREATE TABLE robot
 (
-	goods_id  varchar(50) primary key,
+	goods_id  int primary key,
     instock varchar(50) not null,
     produced_date date not null,
     software_edition varchar(50) default '0',
