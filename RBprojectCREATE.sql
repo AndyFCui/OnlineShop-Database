@@ -29,7 +29,6 @@ CREATE TABLE robot_order
 	order_id int primary key,
     order_date date not null,
     order_status varchar(50) not null,
-    order_completion_status varchar(50) not null,
     deliver_preference varchar(50) default 'ship',
     operator_id int not null,
     customer_id int not null,
