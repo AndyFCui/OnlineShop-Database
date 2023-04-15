@@ -1,5 +1,151 @@
 use rbstore;
+##########################################################################
+-- Create guest acount for creating account
+DROP PROCEDURE IF EXISTS default_account;
+DELIMITER $$
+CREATE PROCEDURE default_account() 
+BEGIN
+ -- Create user 
+ CREATE USER 'default_account'@'localhost' IDENTIFIED BY 'rbstore_guest';
+ -- Grant privileges
+    GRANT CREATE USER ON *.* TO 'default_account'@'localhost';
+    GRANT SELECT ON *.* TO 'default_account'@'localhost';
+    FLUSH PRIVILEGES;
+    
+    -- Insert the username into the user_info table
+    INSERT INTO operator_id VALUES ('default_account');
+END$$
+DELIMITER ;
 
+-- Test
+# CALL default_account();
+
+SELECT user, host FROM mysql.user;
+SELECT * FROM Operator;
+DROP USER 'test'@'localhost';
+
+
+/*
+Signup a new account. 
+*/
+-- Create the new user_id
+DROP PROCEDURE IF EXISTS create_account;
+
+DELIMITER $$
+CREATE PROCEDURE create_account(
+    IN user_id VARCHAR(50),
+    IN user_password VARCHAR(50),
+    IN operator_name VARCHAR(50),
+    IN operator_address VARCHAR(50),
+    IN operator_phone_number VARCHAR(50),
+    IN operator_legal_sex VARCHAR(50),
+    IN operator_date_of_birth DATE
+)
+BEGIN
+ DECLARE operator_no INT;
+    SELECT COUNT(*)+1 FROM Operator INTO operator_no;
+    
+ -- Create user 
+    SET @sql = CONCAT(
+  "CREATE USER '", 
+        user_id, 
+        "'@'localhost' IDENTIFIED BY '", 
+        user_password, 
+        "';"
+        );
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+    
+    -- Grant privileges
+    SET @sql_grant = CONCAT("GRANT SELECT, INSERT, UPDATE, DELETE ON rbstore.* TO '", user_id, "'@'localhost';");
+    PREPARE stmt_grant FROM @sql_grant;
+    EXECUTE stmt_grant;
+    DEALLOCATE PREPARE stmt_grant;
+    
+ FLUSH PRIVILEGES;
+    
+    -- Insert the new user into the Operator table
+    INSERT INTO Operator (
+		operator_id,
+        name, 
+        address, 
+        phone_number, 
+        legal_sex, 
+        date_of_birth, 
+        user_id, 
+        user_password
+    ) VALUES (
+  operator_no,
+        operator_name, 
+        operator_address, 
+        operator_phone_number, 
+        operator_legal_sex, 
+        operator_date_of_birth, 
+        user_id, 
+        user_password
+    );
+END$$
+DELIMITER ;
+
+-- Get id for operator
+DROP PROCEDURE IF EXISTS get_id;
+-- get id from name
+DELIMITER //
+CREATE PROCEDURE get_id(
+	IN operator_name varchar(50),
+    OUT get_operator_id INT
+)
+BEGIN
+ SELECT operator_id 
+    FROM operator
+    where name = operator_name
+    INTO get_operator_id;
+END//
+DELIMITER ;
+
+
+
+-- ##################################################
+-- # Delete account by operator_id                  #
+-- ##################################################
+DROP PROCEDURE IF EXISTS delete_account_by_operator_id;
+
+DELIMITER $$
+CREATE PROCEDURE delete_account_by_operator_id(IN target_operator_id INT)
+BEGIN
+    -- Find the corresponding user_id
+    DECLARE target_user_id VARCHAR(50);
+    SELECT user_id INTO target_user_id FROM Operator WHERE operator_id = target_operator_id;
+
+    -- Delete the record from the Operator table
+    DELETE FROM Operator WHERE operator_id = target_operator_id;
+
+    -- Drop the user
+    SET @sql = CONCAT(
+        "DROP USER '", 
+        target_user_id, 
+        "'@'localhost';"
+        );
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+
+    FLUSH PRIVILEGES;
+END$$
+DELIMITER ;
+-- ##################################################
+
+
+CALL delete_account_by_operator_id(0);
+
+-- CALL create_account('andy', '123123')
+-- SHOW GRANTS FOR 'test'@'localhost';
+
+-- Check the user exist or not
+-- DROP FUNCTION IF EXISTS check_user();
+
+-- GET ID FROM INPUT OPERATOR NAME
 DROP PROCEDURE IF EXISTS get_id;
 -- get id from name
 DELIMITER //
@@ -15,10 +161,10 @@ BEGIN
 END//
 DELIMITER ;
 
--- CREATE PART;
+-- INSERT PART;
 
 
--- customer
+-- insert customer
 DROP PROCEDURE IF EXISTS insert_customer;
 
 DELIMITER //
@@ -43,7 +189,7 @@ DELIMITER ;
 -- Call register_customer(1, 'John Smith', '123 Main St', 5551234, 'Male', '1980-01-01', 1, 123456);
 -- SELECT * from customer;
 
--- credit card
+-- insert credit card
 DROP PROCEDURE IF EXISTS insert_credit_card;
 
 DELIMITER  //
@@ -74,7 +220,7 @@ DELIMITER ;
 -- TEST
 -- SELECT * FROM credit_card;
 
--- robot
+-- insert robot
 DROP PROCEDURE IF EXISTS insert_goods;
 
 DELIMITER //
@@ -114,7 +260,7 @@ DELIMITER ;
 -- CALL insert_software_edition('Galaxy 0.1', 'New software designed for excellent robot', '2018-12-01');
 -- SELECT * FROM software_edition;
 
--- Robot model
+-- insert Robot model
 DROP PROCEDURE IF EXISTS insert_robot_model;
 
 DELIMITER  //
@@ -131,27 +277,29 @@ DELIMITER ;
 -- CALL insert_robot_model(428910, 'Maru');
 -- SELECT * FROM robot;
 
--- Order
+-- Create Order
 DROP PROCEDURE IF EXISTS order_create;
 
 DELIMITER  //
 CREATE PROCEDURE order_create(
-	IN order_id int,
     IN order_date date,
     IN order_status varchar(50),
-    IN order_completion_status varchar(50),
     IN deliver_preference varchar(50),
-    IN operator_id int
+    IN operator_id int, 
+    IN customer_name VARCHAR(50)
     )
 BEGIN
-	INSERT INTO robot_order(order_id, order_date, order_status, order_completion_status, deliver_preference, operator_id, customer_id)
-    VALUES (order_id, order_date, order_status, order_completion_status, deliver_preference, operator_id, customer_id);
+ DECLARE order_no, customer_no INT;
+    SELECT COUNT(*)+1 FROM robot_order INTO order_no;
+    SELECT customer_id FROM customer WHERE name = customer_name;
+ INSERT INTO robot_order(order_id, order_date, order_status, deliver_preference, operator_id, customer_id)
+    VALUES (order_no, order_date, order_status, deliver_preference, operator_id, customer_no);
 END//
 DELIMITER ;
 -- TEST
 -- SELECT * FROM robot_order
 
--- Order detail
+-- Fill Order detail
 DROP PROCEDURE IF EXISTS order_fill;
 
 DELIMITER  //
@@ -171,6 +319,7 @@ DELIMITER ;
 
 
 -- Robot
+
 -- update stock
 DROP PROCEDURE IF EXISTS update_goods_stock;
 DELIMITER  //
@@ -198,7 +347,8 @@ DELIMITER ;
 -- CALL update_goods_stock(300,'sold out');
 
 -- Customer
--- update name
+
+-- update customer name
 DROP PROCEDURE IF EXISTS update_customer_name;
 DELIMITER  //
 CREATE PROCEDURE update_customer_name(
@@ -219,7 +369,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- update address
+-- update customer address
 DROP PROCEDURE IF EXISTS update_customer_address;
 DELIMITER  //
 CREATE PROCEDURE update_customer_address(
@@ -240,7 +390,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- update phone_number
+-- update customer phone_number
 DROP PROCEDURE IF EXISTS update_customer_phone_number;
 DELIMITER  //
 CREATE PROCEDURE update_customer_phone_number(
@@ -439,8 +589,10 @@ CREATE PROCEDURE order_delete(
 	IN delete_order_id INT
 )
 BEGIN
-	DELETE FROM robot_order
-    where order_id = delete_order_id;
+	DELETE FROM order_detail
+    WHERE order_id = delete_order_id;    
+    DELETE FROM robot_order
+    WHERE order_id = delete_order_id;
 END//
 DELIMITER ;
 
@@ -458,33 +610,46 @@ DELIMITER ;
 
 -- Return order Part
 
--- return_request
-DROP PROCEDURE IF EXISTS return_request;
-DELIMITER  //
-CREATE PROCEDURE return_request(
-	IN return_order_id int,
-    IN return_goods_id int
-)
-BEGIN
-	UPDATE order_detail SET return_status = "return request" where order_id = return_id and goods_id = return_goods_id;
-    UPDATE robot_order SET order_status = 'return request' WHERE order_id = return_order_id;
-    UPDATE robot_order SET order_completion_status = "pending" WHERE order_id = return_order_id;
-END//
-DELIMITER ;
 
--- return confirmed
-DROP PROCEDURE IF EXISTS return_confirm;
+-- return payment
+DROP PROCEDURE IF EXISTS return_payment;
 DELIMITER  //
 CREATE PROCEDURE return_confirm(
 	IN return_order_id int,
     IN return_goods_id int
 )
 BEGIN
-	UPDATE order_detail SET return_status = "return success" where order_id = return_id and goods_id = return_goods_id;
-    UPDATE robot_order SET order_completion_status = "finished" WHERE order_id = return_order_id;
-    UPDATE robot SET instock = "in stock" where goods_id = return_goods_id;
+	UPDATE order_detail SET return_status = "payment return" where order_id = return_id and goods_id = return_goods_id;
+    UPDATE robot_order SET order_status = "has goods to return" WHERE order_id = return_order_id;
 END//
 DELIMITER ;
+
+-- return payment and goods
+DROP PROCEDURE IF EXISTS return_payment_and_goods;
+DELIMITER  //
+CREATE PROCEDURE return_payment_and_goods(
+	IN return_order_id int,
+    IN return_goods_id int
+)
+BEGIN
+	UPDATE order_detail SET return_status = "payment and goods return" where order_id = return_id and goods_id = return_goods_id;
+    UPDATE robot_order SET order_status = "has goods and payment to return" WHERE order_id = return_order_id;
+END//
+DELIMITER ;
+
+-- exchange
+DROP PROCEDURE IF EXISTS exchange;
+DELIMITER  //
+CREATE PROCEDURE return_payment_and_goods(
+	IN return_order_id int,
+    IN return_goods_id int
+)
+BEGIN
+	UPDATE order_detail SET return_status = "need to exchange" where order_id = return_id and goods_id = return_goods_id;
+    UPDATE robot_order SET order_status = "has goods to exchange" WHERE order_id = return_order_id;
+END//
+DELIMITER ;
+
 
 -- return denied
 DROP PROCEDURE IF EXISTS return_denied;
@@ -495,7 +660,7 @@ CREATE PROCEDURE return_denied(
 )
 BEGIN
 	UPDATE order_detail SET return_status = "return denied" where order_id = return_id and goods_id = return_goods_id;
-    UPDATE robot_order SET order_completion_status = "return denied" WHERE order_id = return_order_id;    
+    UPDATE robot_order SET order_status = "return denied" WHERE order_id = return_order_id;    
 END//
 DELIMITER ;
 

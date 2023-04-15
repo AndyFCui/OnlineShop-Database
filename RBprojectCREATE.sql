@@ -80,12 +80,14 @@ CREATE TABLE order_detail
 	order_id int not null,
     goods_id int not null,
     sales_price int not null,
+    return_status varchar(50) default "None", 
     primary key(order_id, goods_id),
     CONSTRAINT detail_foreign_order FOREIGN KEY (order_id) REFERENCES robot_order(order_id)
     ON DELETE CASCADE ON UPDATE RESTRICT,
 	CONSTRAINT detail_foreign_good FOREIGN KEY (goods_id) REFERENCES robot(goods_id)
     ON DELETE CASCADE ON UPDATE RESTRICT
 );
+
 
 
 
