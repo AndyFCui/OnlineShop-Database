@@ -1,5 +1,19 @@
 use rbstore;
 
+DROP PROCEDURE IF EXISTS get_id;
+-- get id from name
+DELIMITER //
+CREATE PROCEDURE get_id(
+	IN operator_name INT,
+    OUT get_operator_id INT
+)
+BEGIN
+	SELECT operator_id 
+    FROM operator
+    where name = operator_name
+    INTO get_operator_id;
+END//
+DELIMITER ;
 
 -- CREATE PART;
 
@@ -439,6 +453,49 @@ CREATE PROCEDURE delete_software(
 BEGIN
 	DELETE FROM software_edition
     where edition = for_delete_edition;
+END//
+DELIMITER ;
+
+-- Return order Part
+
+-- return_request
+DROP PROCEDURE IF EXISTS return_request;
+DELIMITER  //
+CREATE PROCEDURE return_request(
+	IN return_order_id int,
+    IN return_goods_id int
+)
+BEGIN
+	UPDATE order_detail SET return_status = "return request" where order_id = return_id and goods_id = return_goods_id;
+    UPDATE robot_order SET order_status = 'return request' WHERE order_id = return_order_id;
+    UPDATE robot_order SET order_completion_status = "pending" WHERE order_id = return_order_id;
+END//
+DELIMITER ;
+
+-- return confirmed
+DROP PROCEDURE IF EXISTS return_confirm;
+DELIMITER  //
+CREATE PROCEDURE return_confirm(
+	IN return_order_id int,
+    IN return_goods_id int
+)
+BEGIN
+	UPDATE order_detail SET return_status = "return success" where order_id = return_id and goods_id = return_goods_id;
+    UPDATE robot_order SET order_completion_status = "finished" WHERE order_id = return_order_id;
+    UPDATE robot SET instock = "in stock" where goods_id = return_goods_id;
+END//
+DELIMITER ;
+
+-- return denied
+DROP PROCEDURE IF EXISTS return_denied;
+DELIMITER  //
+CREATE PROCEDURE return_denied(
+	IN return_order_id int,
+    IN return_goods_id int
+)
+BEGIN
+	UPDATE order_detail SET return_status = "return denied" where order_id = return_id and goods_id = return_goods_id;
+    UPDATE robot_order SET order_completion_status = "return denied" WHERE order_id = return_order_id;    
 END//
 DELIMITER ;
 
