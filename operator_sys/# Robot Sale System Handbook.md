@@ -11,7 +11,7 @@ We need to enter our account and password, then we to login with our exist accou
 ## Operator System Content
 ### System Welcome View
 #### Control Panel 
-#### 2. `Fill Order`
+#### 2. `Create Order`
 #### 2.1. Overnight Delivery 
 This is set the product delivery overnight.
 

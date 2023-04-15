@@ -187,24 +187,103 @@ class DatabaseConnection:
                           )
         self.cnx.commit()
 
+    @staticmethod
+    def order_list():
+        print('###########################################')
+        print('####-- Robot Sale Sys Order Panel  --####')
+        print('###########################################')
+        print('->[1] Refund                              #')
+        print('->[2] Refund & Return Product             #')
+        print('->[3] Exchange                            #')
+        print('->[4] Return Pre Menu                     #')
+        print('###########################################')
+
+    def order_options(self):
+        print('Please Enter Number To Select Options:')
+        user_select = input('->')
+        match user_select:
+            case '1':
+                user_select = 'Refund'
+            case '2':
+                user_select = 'Refund & Return Product'
+            case '3':
+                user_select = 'Exchange'
+            case '4':
+                user_select = 'Return Pre Menu'
+            case _:
+                print('Error Select, Please Select Again.')
 
     def return_order(self):
-        print("To Do Return Order.")
+        self.order_list()
+        self.order_options()
+        # TO DO Procedure
 
+    @staticmethod
+    def management_list():
+        print('###########################################')
+        print('##-- Robot Sale Sys Management Panel  --##')
+        print('###########################################')
+        print('->[1] Storage Management                  #')
+        print('->[2] Edit Operator Info                  #')
+        print('->[3] Edit Customer Info                  #')
+        print('->[4] Edit Robot Info                     #')
+        print('###########################################')
+
+    def edit_customer_info(self):
+        print('###########################################')
+        print('##-- Robot Sale Sys Management Panel  --##')
+        print('##-- Edit Customer Info  --##')
+        print('###########################################')
+        print('->[1] Create                              #')
+        print('->[2] Update                              #')
+        print('->[3] Delete                              #')
+        print('->[4] Add Card                            #')
+        print('###########################################')
+
+        print('Please Enter Number To Select Options:')
+        user_select = input('->')
+        match user_select:
+            case '1':
+                self.create_cus_info()
+            case '2':
+                self.create_update_info()
+            case '3':
+                self.create_del_info()
+            case '4':
+                self.create_add_card()
+            case _:
+                print('Error Select, Please Select Again.')
+
+    def create_cus_info(self):
+        print('Call procedure')
+
+
+    def management_options(self):
+        print('Please Enter Number To Select Options:')
+        user_select = input('->')
+        match user_select:
+            case '1':
+                self.storage_mangement()
+            case '2':
+                self.edit_operator_info()
+            case '3':
+                self.edit_customer_info()
+            case '4':
+                self.edit_robot_info()
+            case _:
+                print('Error Select, Please Select Again.')
+
+    # To Do
     def data_management(self):
-        print("To Do Return Order.")
-
-    def get_operator(operator_name):
-        new_operator_name = operator_name
-        return new_operator_name
+        self.management_list()
+        self.management_options()
+        print('Call procedure')
 
     def main(self):
         self.prompt_user_interface(self)
         if self.status is True:
             self.user_choice()
             self.control_panel_function()
-
-
 
 
 if __name__ == '__main__':
