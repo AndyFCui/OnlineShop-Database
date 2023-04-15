@@ -16,3 +16,9 @@ edition varchar(50) primary key: Galaxy 0.1
 description varchar(50) not null: New software designed for excellent robot
 release_date date not null: 2222-2-22
 ##############################
+goods_id int: 4000
+instock varchar(50): instock
+produced_date date:2222-2-22
+software_edition VARCHAR(50):Galaxy 0.1
+purchased_cost int:300
+model_id int:428910
