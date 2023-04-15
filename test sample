@@ -7,3 +7,6 @@ phone_number varchar(50) not null: 123456
 legal_sex varchar (50) not null: male
 date_of_birth date not null: 2222-2-22
 ##############################
+Model:
+model_id int primary key : 428910
+model_name varchar(50) not null : Maru
