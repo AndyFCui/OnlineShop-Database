@@ -1,6 +1,5 @@
 import pymysql
 
-
 class DatabaseConnection:
     """
     # Content:
@@ -18,6 +17,7 @@ class DatabaseConnection:
         self.default_account = 'root'  # 'default_account'
         self.default_passwd = 'Db@5822900'  # 'rbstore_guest'
         self.cnx_connection()
+        self.current_operator = None
 
     def cnx_connection(self):
         try:
@@ -114,20 +114,97 @@ class DatabaseConnection:
 
         if self.status is True:
             self.welcome(user_name)
+            self.current_operator = user_name
             self.control_panel()
 
     @staticmethod
     def control_panel():
         print('###########################################')
-        print('->[1] View Order                          #')
-        print('->[2] Return Order                        #')
-        print('->[3] View Order                          #')
+        print('####-- Robot Sale Sys Control Panel  --####')
         print('###########################################')
+        print('->[1] Fill Order                          #')
+        print('->[2] Return Order                        #')
+        print('->[3] Data Management')
+        print('###########################################')
+
+    def control_panel_function(self):
+            print('Please Enter Number To Select Operate:(Please with out [], ONLY NUMBER.)')
+            user_select = input("->")
+            match user_select:
+                case '1':
+                    self.order()
+                case '2':
+                    self.return_order()
+                case '3':
+                    self.data_management()
+                case _:
+                    print('Error Select, Please Select Again. (ONLY [1] [2] and [3] OPTIONS.)')
+
+    def order(self):
+        print('Please Enter Order Info:')
+        order_date = input('Order Date:')
+        status_select = input(
+                             '[1]: Order,'
+                             '[2]: Return Request, '
+        )
+
+        while True:
+            match status_select:
+                case '1':
+                    order_status = 'Order'
+                    break
+                case '2':
+                    order_status = 'Return Request'
+                    break
+                case _:
+                    print('Error Select, Please Select Again. (ONLY [1] and [2] OPTIONS.)')
+                    break
+
+        preference_select = input('[1]: Overnight Delivery, '
+                                  '[2]: Regular Delivery')
+        while True:
+            match preference_select:
+                case '1':
+                    preference = 'Overnight Delivery'
+                    break
+                case '2':
+                    preference = 'Regular Delivery'
+                    break
+                case _:
+                    print('Error Select, Please Select Again. (ONLY [1] and [2] OPTIONS.)')
+                    break
+
+        self.cur.execute("SET @operator_id_out = 0")
+        self.cur.callproc('get_id', [self.current_operator, "@operator_id_out"])
+        self.cur.execute("SELECT @operator_id_out")
+        operator_id = self.cur.fetchone()[0]
+        self.cnx.commit()
+        self.cur.callproc('order_create',
+                          order_date,
+                          order_status,
+                          preference,
+                          operator_id
+                          )
+        self.cnx.commit()
+
+
+    def return_order(self):
+        print("To Do Return Order.")
+
+    def data_management(self):
+        print("To Do Return Order.")
+
+    def get_operator(operator_name):
+        new_operator_name = operator_name
+        return new_operator_name
 
     def main(self):
         self.prompt_user_interface(self)
         if self.status is True:
             self.user_choice()
+            self.control_panel_function()
+
+
 
 
 if __name__ == '__main__':
