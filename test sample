@@ -10,3 +10,9 @@ date_of_birth date not null: 2222-2-22
 Model:
 model_id int primary key : 428910
 model_name varchar(50) not null : Maru
+##############################
+Software edition:
+edition varchar(50) primary key: Galaxy 0.1
+description varchar(50) not null: New software designed for excellent robot
+release_date date not null: 2222-2-22
+##############################
