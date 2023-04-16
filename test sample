@@ -2,7 +2,7 @@
 Operator:
 ###########################
 operator_id int primary key: 1
-name varchar(50) not null: tom
+name varchar(50): tom
 address varchar(50): neu
 phone_number varchar(50): 123123
 legal_sex varchar (50): male
@@ -13,20 +13,20 @@ user_password varchar(50): 123123
 #############################
 Customer:
 customer_id int primary key: 100
-name varchar(50) not null: Tom
-address varchar(50) not null: address
-phone_number varchar(50) not null: 123456
-legal_sex varchar (50) not null: male
-date_of_birth date not null: 2222-02-22
+name varchar(50): Tom
+address varchar(50): address
+phone_number varchar(50): 123456
+legal_sex varchar (50): male
+date_of_birth date: 2222-02-22
 ##############################
 Model:
 model_id int primary key : 428910
-model_name varchar(50) not null : Maru
+model_name varchar(50): Maru
 ##############################
 Software edition:
 edition varchar(50) primary key: Galaxy 0.1
-description varchar(50) not null: New software designed for excellent robot
-release_date date not null: 2222-02-22
+description varchar(50): New software designed for excellent robot
+release_date date: 2222-02-22
 ##############################
 goods_id int: 4000
 instock varchar(50): instock
@@ -37,8 +37,8 @@ model_id int:428910
 ##############################
 order_id int primary key: 1
 order_date date not null: 2222-02-22
-order_status varchar(50) not null: Order
-deliver_preference varchar(50) default 'regular' : regular
-operator_id int not null: 
-customer_id int not null: 100
+order_status varchar(50): Order
+deliver_preference varchar(50): regular
+operator_id int: 1
+customer_id int: 100
 ##############################
