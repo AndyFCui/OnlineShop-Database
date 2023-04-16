@@ -24,9 +24,9 @@ purchased_cost int:300
 model_id int:428910
 ##############################
 order_id int primary key: 1
-order_date date not null: 2222-2-22
+order_date date not null: 2222-02-22
 order_status varchar(50) not null: Order
-deliver_preference varchar(50) default 'regular' : 
+deliver_preference varchar(50) default 'regular' : regular
 operator_id int not null: 
-customer_id int not null: 
+customer_id int not null: 100
 ##############################
