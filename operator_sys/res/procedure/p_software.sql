@@ -24,7 +24,7 @@ BEGIN
 END //
 DELIMITER ;
 -- TEST
--- CALL insert_software_edition('Galaxy 0.1', 'New software designed for excellent robot', '2022-2-22');
+-- CALL insert_software_edition('Galaxy 0.1', 'New software designed for excellent robot', '2022-02-22');
 -- SELECT COUNT(*) FROM software_edition where edition = 'Galaxy 0.1';
 #####################################################################
 -- delete software

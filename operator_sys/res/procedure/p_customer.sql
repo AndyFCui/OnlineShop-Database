@@ -21,7 +21,7 @@ BEGIN
 END //
 DELIMITER ;
 -- TEST
--- CALL insert_customer(100,'Tom', 'address', '123456', 'male', '2222-2-22');
+-- CALL insert_customer(100,'Tom', 'address', '123456', 'male', '2222-02-22');
 -- SELECT * FROM customer;
 ##################################################
 -- Update
