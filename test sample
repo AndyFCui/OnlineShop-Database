@@ -42,3 +42,7 @@ deliver_preference varchar(50): regular
 operator_id int: 1
 customer_id int: 100
 ##############################
+Order detail:
+order_id: 1
+goods_id int: 4000
+sales_price int: 500
