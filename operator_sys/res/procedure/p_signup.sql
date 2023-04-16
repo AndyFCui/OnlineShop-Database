@@ -160,3 +160,23 @@ BEGIN
     INTO get_operator_id;
 END//
 DELIMITER ;
+-- TEST
+--     INSERT INTO Operator (
+-- 		operator_id,
+--         name, 
+--         address, 
+--         phone_number, 
+--         legal_sex, 
+--         date_of_birth, 
+--         user_id, 
+--         user_password
+--     ) VALUES (1,
+--         'tom', 
+--         'neu', 
+--         '123123', 
+--         'male', 
+--         '2023-02-16', 
+--         'tom', 
+--         '123123'
+--     );
+-- SELECT * FROM operator;
