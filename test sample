@@ -30,7 +30,7 @@ release_date date: 2222-02-22
 ##############################
 goods_id int: 4000
 instock varchar(50): instock
-produced_date date:2222-2-22
+produced_date date:2222-02-22
 software_edition VARCHAR(50):Galaxy 0.1
 purchased_cost int:300
 model_id int:428910
