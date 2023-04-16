@@ -46,4 +46,4 @@ Order detail:
 order_id: 1
 goods_id int: 4000
 sales_price int: 500
-return_status varchar(50): default
+return_status varchar(50): None
