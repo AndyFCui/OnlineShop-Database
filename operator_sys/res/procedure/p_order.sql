@@ -56,9 +56,9 @@ BEGIN
 END//
 DELIMITER ;
 -- TEST
-DELIMITER  //
-SET @status = 'None';
-CALL view_order_status(1,@status);
-SELECT @status;
-END//
-DELIMITER ;
+-- DELIMITER  //
+-- SET @status = 'None';
+-- CALL view_order_status(1,@status);
+-- SELECT @status;
+-- END//
+-- DELIMITER ;
