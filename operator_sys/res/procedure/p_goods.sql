@@ -31,3 +31,23 @@ DELIMITER ;
 -- CALL insert_goods ('4000','instock', '2222-02-22', 'Galaxy 0.1', 300, 428910);
 -- SELECT * FROM robot;
 ###########################################################
+-- View goods
+DELIMITER  //
+DROP PROCEDURE IF EXISTS view_goods_status;
+CREATE PROCEDURE view_goods_status(
+	IN in_goods_id int,
+    OUT status varchar(50)
+)
+BEGIN
+    SELECT instock 
+    FROM robot 
+    where goods_id = in_goods_id
+    into status;
+END//
+DELIMITER ;
+-- TEST
+-- DELIMITER  //
+-- SET @statusn = 'None';
+-- CALL view_goods_status(3000, @statusn);
+-- SELECT @statusn//
+-- DELIMITER ;
