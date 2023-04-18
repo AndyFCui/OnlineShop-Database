@@ -116,3 +116,16 @@ DELIMITER ;
 -- TEST
 CALL delete_customer('1');
 SELECT * FROM customer where customer_id = 100;
+################################################
+-- view customer
+DROP PROCEDURE IF EXISTS view_customer;
+DELIMITER  //
+CREATE PROCEDURE view_customer(
+    IN for_view_name varchar(50)
+)
+BEGIN
+	Select * from customer
+    where name = for_view_name;
+END//
+-- TEST
+-- CALL view_customer('Tom');
