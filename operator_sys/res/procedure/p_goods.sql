@@ -51,3 +51,43 @@ DELIMITER ;
 -- CALL view_goods_status(3000, @statusn);
 -- SELECT @statusn//
 -- DELIMITER ;
+
+-- update stock
+DROP PROCEDURE IF EXISTS update_goods_stock;
+DELIMITER  //
+CREATE PROCEDURE update_goods_stock(
+	IN u_goods_id int,
+    IN instock_change varchar(50)
+)
+BEGIN
+	DECLARE indicate_goods varchar(50);
+    SELECT COUNT(*)
+    FROM robot
+    where goods_id = u_goods_id
+    INTO indicate_goods;
+    IF indicate_goods = 0 THEN
+		SIGNAL SQLSTATE '59999' SET MESSAGE_TEXT = 'There is no such goods ';
+	ELSEIF (SELECT instock from robot WHERE goods_id = u_goods_id) = instock_change THEN
+		SIGNAL SQLSTATE '59998' SET MESSAGE_TEXT = 'The stock already has this new status';
+    ELSE
+		UPDATE robot SET instock = instock_change WHERE goods_id = u_goods_id;
+    END IF;
+END//
+DELIMITER ;
+-- TEST
+SELECT * FROM robot;
+CALL update_goods_stock(3000,'instock');
+
+-- delete robot
+DROP PROCEDURE IF EXISTS delete_goods;
+DELIMITER  //
+CREATE PROCEDURE delete_goods(
+	IN delete_goods_id INT
+) 
+BEGIN
+	DELETE FROM robot
+    where goods_id = delete_goods_id;
+END//
+DELIMITER ;
+-- TEST
+CALL delete_goods(3000);
