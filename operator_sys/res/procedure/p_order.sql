@@ -29,12 +29,13 @@ DROP PROCEDURE IF EXISTS order_fill;
 DELIMITER  //
 CREATE PROCEDURE order_fill(
 	IN order_id int,
-    IN goods_id int,
+    IN in_goods_id int,
     IN sales_price int
     )
 BEGIN
 	INSERT INTO order_detail(order_id, goods_id, sales_price)
-    VALUES (order_id, goods_id, sales_price);
+    VALUES (order_id, in_goods_id, sales_price);
+    UPDATE robot SET instock = 'sold' where goods_id = in_goods_id;
 END//
 DELIMITER ;
 -- TEST
