@@ -47,3 +47,17 @@ order_id: 1
 goods_id int: 4000
 sales_price int: 500
 return_status varchar(50): None
+#############################
+order_id int primary key: 2
+order_date date not null: 2223-04-15
+order_status varchar(50): Order
+deliver_preference varchar(50): regular
+operator_id int: 1
+customer_id int: 100
+##############################
+Order detail:
+order_id: 2
+goods_id int: 3000
+sales_price int: 500
+return_status varchar(50): None
+##############################
