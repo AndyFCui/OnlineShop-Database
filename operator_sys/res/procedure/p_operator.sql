@@ -265,6 +265,7 @@ CREATE PROCEDURE update_operator_user_id(
 )
 BEGIN
 	DECLARE indicate_operator INT;
+    DECLARE sys_user_id varchar(50);
     SELECT COUNT(*)
     FROM operator
     where name = operator_name
@@ -273,6 +274,9 @@ BEGIN
 		SIGNAL SQLSTATE '60000' SET MESSAGE_TEXT = 'There is no such operator';
 	ELSE
 		UPDATE operator SET user_id = new_user_id WHERE name = operator_name LIMIT 1;
+        SELECT user_id FROM operator WHERE name = 'operator_name' INTO sys_user_id;
+        UPDATE mysql.user SET User = new_user_id WHERE User = 'sys_user_id';
+        FLUSH PRIVILEGES;
     END IF;
 END//
 DELIMITER ;
@@ -290,6 +294,7 @@ CREATE PROCEDURE update_operator_user_password(
 )
 BEGIN
 	DECLARE indicate_operator INT;
+	DECLARE sys_user_id varchar(50);
     SELECT COUNT(*)
     FROM operator
     where name = operator_name
@@ -298,10 +303,13 @@ BEGIN
 		SIGNAL SQLSTATE '60000' SET MESSAGE_TEXT = 'There is no such operator';
 	ELSE
 		UPDATE operator SET user_password = new_user_password WHERE name = operator_name LIMIT 1;
+        SELECT user_id FROM operator WHERE name = 'operator_name' INTO sys_user_id;
+        UPDATE mysql.user SET Password = PASSWORD(new_user_password) WHERE User = 'sys_user_id';
+        FLUSH PRIVILEGES;
     END IF;
 END//
 DELIMITER ;
 -- TEST
-CALL update_operator_user_password('tom', 'Lucky');
-SELECT * from operator;
-CALL update_operator_user_password('tom', '123123');
+-- CALL update_operator_user_password('tom', 'Lucky');
+-- SELECT * from operator;
+-- CALL update_operator_user_password('tom', '123123');
