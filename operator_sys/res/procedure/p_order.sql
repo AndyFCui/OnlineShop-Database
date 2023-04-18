@@ -43,22 +43,16 @@ DELIMITER ;
 -- SELECT sales_price from order_detail where order_id = 1;
 
 -- View order
+DROP PROCEDURE IF EXISTS view_order;
 DELIMITER  //
-DROP PROCEDURE IF EXISTS view_order_status;
-CREATE PROCEDURE view_order_status(
-	IN in_order_id int,
-    OUT status varchar(50)
+CREATE PROCEDURE view_order(
+	IN in_order_id int
 )
 BEGIN
-    SELECT order_status 
+    SELECT * 
     FROM robot_order 
-    where order_id = in_order_id
-    into status;
+    where order_id = in_order_id;
 END//
 DELIMITER ;
 -- TEST
--- DELIMITER  //
--- SET @status = 'None';
--- CALL view_order_status(1,@status);
--- SELECT @status//
--- DELIMITER ;
+-- CALL view_order(1);

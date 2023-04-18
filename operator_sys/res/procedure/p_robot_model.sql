@@ -40,3 +40,18 @@ DELIMITER ;
 -- TEST
 -- CALL delete_robot_model(428910);
 -- SELECT COUNT(*) FROM robot_model where model_id = 428910;
+
+-- View model
+DROP PROCEDURE IF EXISTS view_model;
+DELIMITER  //
+CREATE PROCEDURE view_model(
+	IN in_model_name varchar(50)
+)
+BEGIN
+    SELECT * 
+    FROM robot_model 
+    where model_name = in_model_name;
+END//
+DELIMITER ;
+-- TEST
+-- CALL view_model('Maru');

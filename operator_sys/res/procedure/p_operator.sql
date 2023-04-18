@@ -313,3 +313,17 @@ DELIMITER ;
 -- CALL update_operator_user_password('tom', 'Lucky');
 -- SELECT * from operator;
 -- CALL update_operator_user_password('tom', '123123');
+
+-- view operator
+DROP PROCEDURE IF EXISTS view_operator;
+DELIMITER  //
+CREATE PROCEDURE view_operator(
+	IN in_name varchar(50)
+)
+BEGIN
+	SELECT * 
+    FROM operator
+    WHERE name = in_name;
+END//
+-- TEST
+CALL view_operator('tom');

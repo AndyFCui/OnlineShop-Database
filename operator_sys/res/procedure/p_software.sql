@@ -41,3 +41,18 @@ DELIMITER ;
 -- TEST 
 -- CALL delete_software('Galaxy 0.1');
 -- SELECT COUNT(*) FROM software_edition where edition = 'Galaxy 0.1';
+###################################################################
+-- view software
+DROP PROCEDURE IF EXISTS view_software;
+DELIMITER  //
+CREATE PROCEDURE view_software(
+	IN in_edition varchar(50)
+)
+BEGIN
+    SELECT * 
+    FROM software_edition 
+    where edition = in_edition;
+END//
+DELIMITER ;
+-- TEST
+-- CALL view_software('Galaxy 0.1');

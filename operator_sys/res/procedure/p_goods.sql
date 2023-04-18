@@ -46,6 +46,7 @@ DELIMITER ;
 -- TEST
 CALL view_goods(4000);
 SELECT * from robot;
+
 -- update stock
 DROP PROCEDURE IF EXISTS update_goods_stock;
 DELIMITER  //
