@@ -304,9 +304,9 @@ BEGIN
     IF indicate_operator = 0 THEN
 		SIGNAL SQLSTATE '60000' SET MESSAGE_TEXT = 'There is no such operator';
 	ELSE
-		UPDATE operator SET user_password = new_user_password WHERE name = operator_name;
+		UPDATE operator SET user_password = new_user_password WHERE name = operator_name LIMIT 1;
         SELECT user_id FROM operator WHERE name = operator_name INTO sys_user_id;
-		SET @sql = CONCAT('SET PASSWORD FOR "', sys_user_id, '"@"localhost" = PASSWORD("', new_user_password, '")');
+		SET @sql = CONCAT('SET PASSWORD FOR "', sys_user_id, '"@"localhost" = "', new_user_password, '"');
 		PREPARE stmt FROM @sql;
 		EXECUTE stmt;
 		DEALLOCATE PREPARE stmt;
@@ -316,8 +316,8 @@ END//
 DELIMITER ;
 -- TEST
 -- CALL update_operator_user_password('tom', 'Lucky');
--- SELECT * from operator;
--- CALL update_operator_user_password('tom', '123123');
+SELECT * from operator;
+CALL update_operator_user_password('test', '653232');
 
 -- view operator
 DROP PROCEDURE IF EXISTS view_operator;
