@@ -1,5 +1,6 @@
 import pymysql
 
+
 class DatabaseConnection:
     """
     # Content:
@@ -44,14 +45,7 @@ class DatabaseConnection:
                 print('[Status] Connection Failed:{}'.format(e))
                 self.login(self)
 
-
     def sign_up(self):
-        # new_user = input("new_user: ", )
-        # new_password = input("passwd: ")
-        # Create a new user and set the password
-        # query = "CREATE USER %s@'localhost' IDENTIFIED BY %s"
-        # self.cur.execute(query, (new_user, new_password))
-        # self.cnx.commit()
         print('Please Enter Info For Sign Up:')
         new_user = input('new_user: ', )
         new_password = input('passwd: ')
@@ -60,17 +54,19 @@ class DatabaseConnection:
         new_phone = input('your phone number: ')
         new_sex = input('your sex: ')
         new_date_birth = input('your birth(year-mm-dd): ')
-
-        self.cur.callproc('create_account',
-                          [new_user,
-                           new_password,
-                           new_name,
-                           new_address,
-                           new_phone,
-                           new_sex,
-                           new_date_birth])
-        self.cnx.commit()
-        print(f"User '{new_user}' created with password '{new_password}'.")
+        try:
+            self.cur.callproc('create_account',
+                              [new_user,
+                               new_password,
+                               new_name,
+                               new_address,
+                               new_phone,
+                               new_sex,
+                               new_date_birth])
+            self.cnx.commit()
+            print(f"User '{new_user}' created with password '{new_password}'.")
+        except Exception as e:
+            print(f"Error: {e}")
 
         # Close guest account, and prepare to connect new account
         self.status = False
@@ -122,8 +118,7 @@ class DatabaseConnection:
             self.current_operator = user_name
             self.control_panel()
 
-    @staticmethod
-    def control_panel():
+    def control_panel(self):
         print('###########################################')
         print('####-- Robot Sale Sys Control Panel  --####')
         print('###########################################')
@@ -133,71 +128,62 @@ class DatabaseConnection:
         print('->[4] Exit System                         #')
         print('###########################################')
 
+        self.control_panel_function()
+
     def control_panel_function(self):
-            print('Please Enter Number To Select Operate:'
-                  '(Please with out [], ONLY NUMBER.)')
-            user_select = input("->")
-            match user_select:
-                case '1':
-                    self.order()
-                case '2':
-                    self.return_order_list()
-                case '3':
-                    self.data_management()
-                case '4':
-                    exit()
-                    self.cur.close()
-                    self.cnx.close()
-                case _:
-                    print('Error Select, Please Select Again. '
-                          '(ONLY [1] [2] and [3] OPTIONS.)')
+        print('Please Enter Number To Select Operate:'
+              '(Please with out [], ONLY NUMBER.)')
+        user_select = input("->")
+        match user_select:
+            case '1':
+                self.order()
+                self.control_panel()
+            case '2':
+                self.return_order_list()
+                self.control_panel()
+            case '3':
+                self.management_list()
+                self.control_panel()
+            case '4':
+                self.cur.close()
+                self.cnx.close()
+                exit()
+            case _:
+                print('Error Select, Please Select Again. '
+                      '(ONLY [1] [2] and [3] OPTIONS.)')
+                self.control_panel()
 
     def order(self):
         print('Please Enter Order Info:')
         order_date = input('Order Date:')
-        status_select = input(
-                             '[1]: Order,'
-                             '[2]: Return Request, '
-        )
+        print('Please Enter Order Status:')
+        print('Status: `Order`, `Return Request`')
+        order_status = input('Status:')
+        print('Please Enter Order Preference:')
+        print('Preference: `Overnight Delivery`, `Regular Delivery`')
+        preference = input('Preference:')
 
-        while True:
-            match status_select:
-                case '1':
-                    order_status = 'Order'
-                    break
-                case '2':
-                    order_status = 'Return Request'
-                    break
-                case _:
-                    print('Error Select, Please Select Again. (ONLY [1] and [2] OPTIONS.)')
-                    break
-
-        preference_select = input('[1]: Overnight Delivery, '
-                                  '[2]: Regular Delivery')
-        while True:
-            match preference_select:
-                case '1':
-                    preference = 'Overnight Delivery'
-                    break
-                case '2':
-                    preference = 'Regular Delivery'
-                    break
-                case _:
-                    print('Error Select, Please Select Again. (ONLY [1] and [2] OPTIONS.)')
-                    break
+        customer_name = input('Customer Name:')
 
         self.cur.execute("SET @operator_id_out = 0")
         self.cur.callproc('get_id', [self.current_operator, "@operator_id_out"])
         self.cur.execute("SELECT @operator_id_out")
         operator_id = self.cur.fetchone()[0]
         self.cnx.commit()
-        self.cur.callproc('order_create',
-                          order_date,
-                          order_status,
-                          preference,
-                          operator_id
-                          )
-        self.cnx.commit()
+
+        # Call the 'order_create' stored procedure with required parameters
+        try:
+            self.cur.callproc('order_create', [
+                order_date,
+                order_status,
+                preference,
+                operator_id,
+                customer_name
+            ])
+            self.cnx.commit()
+            print("Order created successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def return_order_list(self):
         print('###########################################')
@@ -219,15 +205,12 @@ class DatabaseConnection:
             case '1':
                 self.refund()
                 self.return_order_list()
-                self.return_order_options()
             case '2':
                 self.refund_and_products()
                 self.return_order_list()
-                self.return_order_options()
             case '3':
                 self.exchange()
                 self.return_order_list()
-                self.return_order_options()
             case '4':
                 self.control_panel()
                 self.control_panel_function()
@@ -237,7 +220,6 @@ class DatabaseConnection:
             case _:
                 print('Error Select, Please Select Again.')
                 self.return_order_list()
-                self.return_order_options()
 
     def refund(self):
         print('Please Enter Request Return Order Information:')
@@ -320,8 +302,7 @@ class DatabaseConnection:
         finally:
             result_cursor.close()
 
-    @staticmethod
-    def management_list():
+    def management_list(self):
         print('###########################################')
         print('##-- Robot Sale Sys Management Panel  --##')
         print('###########################################')
@@ -332,6 +313,8 @@ class DatabaseConnection:
         print('->[5] Back Last Menu                      #')
         print('->[6] Back Main Menu                      #')
         print('###########################################')
+
+        self.management_options()
 
     def edit_customer_info(self):
         print('###########################################')
@@ -349,10 +332,10 @@ class DatabaseConnection:
 
         self.customer_info_options()
 
-
     """
     This function is work for customer options.
     """
+
     def customer_info_options(self):
         print('Please Enter Number To Select Options:')
         user_select = input('->')
@@ -379,11 +362,16 @@ class DatabaseConnection:
         print('Please Enter Request Update Customer Information:')
         cus_name = input('Customer Name:')
         cus_name_new = input('Customer New Name:')
-        self.cur.callproc('update_customer_name',
-                          [cus_name,
-                           cus_name_new
-                          ])
-        self.cnx.commit
+
+        try:
+            self.cur.callproc('update_customer_name', [
+                cus_name,
+                cus_name_new
+            ])
+            self.cnx.commit()
+            print("Customer information updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def create_cus_info(self):
         print('Please Enter Customer Information:')
@@ -393,23 +381,31 @@ class DatabaseConnection:
         customer_cell = input('Customer Phone Number:')
         customer_sex = input('Customer Legal Sex(Male/Female):')
         customer_dob = input('Customer Date Of Birth(YYYY-MM-DD):')
-        self.cur.callproc('insert_customer',
-                          [customer_id,
-                           customer_name,
-                           customer_addr,
-                           customer_cell,
-                           customer_sex,
-                           customer_dob
-                           ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('insert_customer', [
+                customer_id,
+                customer_name,
+                customer_addr,
+                customer_cell,
+                customer_sex,
+                customer_dob
+            ])
+            self.cnx.commit()
+            print("Customer information created successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def del_cus_info(self):
         print('Please Enter Customer Information:')
         customer_id = input('Customer ID:')
-        self.cur.callproc('del_customer',
-                          [customer_id,
-                           ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('del_customer', [customer_id])
+            self.cnx.commit()
+            print("Customer information deleted successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def edit_robot_info_list(self):
         print('###########################################')
@@ -460,21 +456,27 @@ class DatabaseConnection:
         print('Please Enter Robot Information:')
         model_id = input('Model ID:')
         model_name = input('Model Name:')
-        self.cur.callproc('insert_robot_model',
-                          [
-                              model_id,
-                              model_name
-                          ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('insert_robot_model', [
+                model_id,
+                model_name
+            ])
+            self.cnx.commit()
+            print("Robot model information created successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def delete_model(self):
         print('Please Enter Robot Information:')
         model_id = input('Model ID:')
-        self.cur.callproc('delete_robot_model',
-                          [
-                              model_id,
-                          ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('delete_robot_model', [model_id])
+            self.cnx.commit()
+            print("Robot model deleted successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def edit_robot_select(self):
         print('Please Enter Number To Select Options:')
@@ -531,23 +533,31 @@ class DatabaseConnection:
         print('Please Enter Robot Software Information:')
         edition = input('Edition:')
         description = input('Software Description:')
-        release = input('Release Date(YYY-MM-DD):')
-        self.cur.callproc('insert_software_edition',
-                          [
-                              edition,
-                              description,
-                              release
-                          ])
-        self.cnx.commit()
+        release = input('Release Date(YYYY-MM-DD):')
+
+        try:
+            self.cur.callproc('insert_software_edition', [
+                edition,
+                description,
+                release
+            ])
+            self.cnx.commit()
+            print("Robot software information created successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def delete_software(self):
         print('Please Enter Robot Software Delete Information:')
         edition = input('Edition:')
-        self.cur.callproc('delete_software',
-                          [
-                              edition,
-                          ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('delete_software', [
+                edition,
+            ])
+            self.cnx.commit()
+            print("Robot software information deleted successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def view_software(self):
         print('Please Enter Robot Software View Information:')
@@ -560,7 +570,8 @@ class DatabaseConnection:
             # Fetch and print the result
             print("\nResults:")
             print(
-                f"{'Software ID':<15}{'Edition':<20}{'Other Column':<20}")  # Add more column names here as per your table schema
+                f"{'Software ID':<15}{'Edition':<20}{'Other Column':<20}")
+            # Add more column names here as per your table schema
             print("-" * 55)
 
             for result in result_cursor.stored_results():
@@ -643,42 +654,51 @@ class DatabaseConnection:
         software_ed = input('Software Edition:')
         price = input('Purchased Price:')
         model_id = input('Model ID:')
-        self.cur.callproc('insert_goods',
-                        [
-                        goods_id,
-                        goods_stock,
-                        produced_date,
-                        software_ed,
-                        price,
-                        model_id
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('insert_goods', [
+                goods_id,
+                goods_stock,
+                produced_date,
+                software_ed,
+                price,
+                model_id
+            ])
+            self.cnx.commit()
+            print("Goods information added successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def goods_update(self):
         print('Please Enter Goods Information:')
         goods_id = input('Goods ID:')
         goods_stock = input('In Stock Change Value:')
-        self.cur.callproc('update_goods_stock',
-                        [
-                        goods_id,
-                        goods_stock
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('update_goods_stock', [
+                goods_id,
+                goods_stock
+            ])
+            self.cnx.commit()
+            print("Goods stock updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
+
     def goods_delete(self):
         print('Please Enter Goods Information:')
         goods_id = input('Goods ID:')
-        self.cur.callproc('delete_goods',
-                        [
-                        goods_id,
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('delete_goods', [
+                goods_id,
+            ])
+            self.cnx.commit()
+            print("Goods deleted successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def goods_view(self):
         print('To Do Later')
-
-    def data_management(self):
-        self.management_list()
-        self.management_options()
 
     def edit_operator_list(self):
         print('###########################################')
@@ -712,14 +732,17 @@ class DatabaseConnection:
     def operator_logoff(self):
         print('Please Enter Operator Information:')
         operator_id = input('Operator ID:')
-        self.cur.callproc('update_operator_name',
-                          [
-                              operator_id
-                          ])
-        self.cnx.commit()
 
-    @staticmethod
-    def operator_update_list():
+        try:
+            self.cur.callproc('update_operator_name', [
+                operator_id
+            ])
+            self.cnx.commit()
+            print("Operator logged off successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def operator_update_list(self):
         print('###########################################')
         print('##-- Robot Sale Sys Management Panel   --##')
         print('##-- Update Operator Options  --##')
@@ -733,19 +756,26 @@ class DatabaseConnection:
         print('->[7] Back Main Menu                      #')
         print('###########################################')
 
+        self.operator_update_select()
+
     def operator_update_select(self):
         user_select = input('->')
         match user_select:
             case '1':
                 self.operator_update_name()
+                self.operator_update_list()
             case '2':
                 self.operator_update_address()
+                self.operator_update_list()
             case '3':
                 self.operator_update_phone()
+                self.operator_update_list()
             case '4':
                 self.operator_update_user_id()
+                self.operator_update_list()
             case '5':
                 self.operator_update_password()
+                self.operator_update_list()
             case '6':
                 self.management_list()
                 self.management_options()
@@ -754,61 +784,82 @@ class DatabaseConnection:
                 self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
+                self.operator_update_list()
 
     def operator_update_name(self):
         print('Please Enter Operator Information:')
         operator_name = input('Operator Name:')
         new_name = input('Operator New Name:')
-        self.cur.callproc('update_operator_name',
-                        [
-                        operator_name,
-                        new_name
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('update_operator_name', [
+                operator_name,
+                new_name
+            ])
+            self.cnx.commit()
+            print("Operator name updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def operator_update_address(self):
         print('Please Enter Operator Information:')
         operator_address = input('Operator Address:')
         new_address = input('Operator New Address:')
-        self.cur.callproc('update_operator_address',
-                        [
-                        operator_address,
-                        new_address
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('update_operator_address', [
+                operator_address,
+                new_address
+            ])
+            self.cnx.commit()
+            print("Operator address updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def operator_update_phone(self):
         print('Please Enter Operator Information:')
         operator_phone = input('Operator Phone:')
         new_phone = input('Operator New Phone:')
-        self.cur.callproc('update_operator_phone',
-                        [
-                        operator_phone,
-                        new_phone
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('update_operator_phone', [
+                operator_phone,
+                new_phone
+            ])
+            self.cnx.commit()
+            print("Operator phone updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def operator_update_user_id(self):
         print('Please Enter Operator Information:')
         user_id = input('Operator User ID:')
         new_user_id = input('Operator New User ID:')
-        self.cur.callproc('update_operator_address',
-                        [
-                        user_id,
-                        new_user_id
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('update_operator_user_id', [
+                user_id,
+                new_user_id
+            ])
+            self.cnx.commit()
+            print("Operator user ID updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def operator_update_password(self):
         print('Please Enter Operator Information:')
         operator_name = input('User Name:')
         new_passwd = input('Operator New Password:')
-        self.cur.callproc('update_operator_user_password',
-                        [
-                        operator_name,
-                        new_passwd
-                        ])
-        self.cnx.commit()
+
+        try:
+            self.cur.callproc('update_operator_user_password', [
+                operator_name,
+                new_passwd
+            ])
+            self.cnx.commit()
+            print("Operator password updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def main(self):
         self.prompt_user_interface(self)
