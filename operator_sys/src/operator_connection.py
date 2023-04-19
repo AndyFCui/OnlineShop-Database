@@ -370,30 +370,29 @@ class DatabaseConnection:
         print('Please Enter Card Holder Name:')
         c_name = input('Holder Name(Customer Name):')
 
-        # Create a new cursor for the result set
-        result_cursor = self.cnx.cursor()
-
         try:
             # Call the stored procedure
-            result_cursor.callproc('view_card', [c_name])
+            self.cur.callproc('view_card', [c_name])
 
             # Fetch the result and print it
-            print(f"Credit Card Information for '{c_name}':")
-            for result in result_cursor.stored_results():
-                rows = result.fetchall()
-                if len(rows) == 0:
-                    print("No credit cards found for the given customer name.")
-                else:
-                    for row in rows:
-                        print(row)
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print(f"No credit cards found for the customer '{c_name}'.")
+            else:
+                # Get the column names
+                column_names = [desc[0] for desc in self.cur.description]
+
+                print(f"Credit Card Information for '{c_name}':")
+                for row in rows:
+                    row_dict = {column_name: value for column_name, value in zip(column_names, row.values())}
+                    for key, value in row_dict.items():
+                        print(f"{key}: {value}")
+                    print()
 
             # Commit the transaction
             self.cnx.commit()
         except Exception as e:
             print(f"Error: {e}")
-        finally:
-            # Close the result cursor
-            result_cursor.close()
 
     def create_add_card(self):
         print('Please Enter Customer Credit Card')
