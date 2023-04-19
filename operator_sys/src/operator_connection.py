@@ -887,12 +887,12 @@ class DatabaseConnection:
 
     def operator_update_address(self):
         print('Please Enter Operator Information:')
-        operator_address = input('Operator Address:')
+        o_name = input('Operator Name:')
         new_address = input('Operator New Address:')
 
         try:
             self.cur.callproc('update_operator_address', [
-                operator_address,
+                o_name,
                 new_address
             ])
             self.cnx.commit()
@@ -917,12 +917,12 @@ class DatabaseConnection:
 
     def operator_update_user_id(self):
         print('Please Enter Operator Information:')
-        user_id = input('Operator User ID:')
+        o_name = input('Operator Name:')
         new_user_id = input('Operator New User ID:')
 
         try:
             self.cur.callproc('update_operator_user_id', [
-                user_id,
+                o_name,
                 new_user_id
             ])
             self.cnx.commit()
