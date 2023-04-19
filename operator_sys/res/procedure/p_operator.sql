@@ -1,3 +1,5 @@
+-- SHOW PROCEDURE STATUS WHERE database() = 'rbstore';
+
 use rbstore;
 ##########################################################################
 -- Create guest acount for creating account
@@ -56,11 +58,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
     
-    -- Grant privileges
-    SET @sql_grant = CONCAT("GRANT SELECT, INSERT, UPDATE, DELETE ON rbstore.* TO '", user_id, "'@'localhost';");
-    PREPARE stmt_grant FROM @sql_grant;
-    EXECUTE stmt_grant;
-    DEALLOCATE PREPARE stmt_grant;
+	-- Grant privileges
+	SET @sql_grant = CONCAT("GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON rbstore.* TO '", user_id, "'@'localhost';");
+	PREPARE stmt_grant FROM @sql_grant;
+	EXECUTE stmt_grant;
+	DEALLOCATE PREPARE stmt_grant;
+
     
  FLUSH PRIVILEGES;
     
@@ -329,3 +332,6 @@ BEGIN
 END//
 -- TEST
 -- CALL view_operator('tom');
+
+-- GRANT EXECUTE ON rbstore.* TO 'test'@'localhost';
+-- SELECT * FROM customer;
