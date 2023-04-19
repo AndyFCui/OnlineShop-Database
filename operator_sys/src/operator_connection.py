@@ -141,7 +141,7 @@ class DatabaseConnection:
                 case '1':
                     self.order()
                 case '2':
-                    self.return_order()
+                    self.return_order_list()
                 case '3':
                     self.data_management()
                 case '4':
@@ -199,8 +199,7 @@ class DatabaseConnection:
                           )
         self.cnx.commit()
 
-    @staticmethod
-    def order_list():
+    def return_order_list(self):
         print('###########################################')
         print('####-- Robot Sale Sys Order Panel  --####')
         print('###########################################')
@@ -211,22 +210,24 @@ class DatabaseConnection:
         print('->[5] Back Main Menu                      #')
         print('###########################################')
 
-    def order_options(self):
+        self.return_order_options()
+
+    def return_order_options(self):
         print('Please Enter Number To Select Options:')
         user_select = input('->')
         match user_select:
             case '1':
                 self.refund()
-                self.order_list()
-                self.order_options()
+                self.return_order_list()
+                self.return_order_options()
             case '2':
                 self.refund_and_products()
-                self.order_list()
-                self.order_options()
+                self.return_order_list()
+                self.return_order_options()
             case '3':
                 self.exchange()
-                self.order_list()
-                self.order_options()
+                self.return_order_list()
+                self.return_order_options()
             case '4':
                 self.control_panel()
                 self.control_panel_function()
@@ -235,8 +236,8 @@ class DatabaseConnection:
                 self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
-                self.order_list()
-                self.order_options()
+                self.return_order_list()
+                self.return_order_options()
 
     def refund(self):
         print('Please Enter Request Return Order Information:')
@@ -595,6 +596,8 @@ class DatabaseConnection:
                 self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
+                self.management_list()
+                self.management_options()
 
     def storage_management(self):
         print('###########################################')
@@ -630,6 +633,7 @@ class DatabaseConnection:
                 self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
+                self.storage_select()
 
     def goods_add(self):
         print('Please Enter Goods Information:')
