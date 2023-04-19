@@ -122,7 +122,7 @@ class DatabaseConnection:
         print('###########################################')
         print('####-- Robot Sale Sys Control Panel  --####')
         print('###########################################')
-        print('->[1] Fill Order                          #')
+        print('->[1] Order                          #')
         print('->[2] Return Order                        #')
         print('->[3] Data Management                     #')
         print('->[4] Exit System                         #')

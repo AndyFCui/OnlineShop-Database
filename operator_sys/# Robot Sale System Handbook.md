@@ -59,7 +59,9 @@ Add a new customer in system.
 ##### 4.3.2. Update (Customer)
 Update customer's information.
 ##### 4.3.3. Delete (Customer)
-Delete the customer's infomation,
+Delete the customer's information.
+##### 4.3.4. View (Customer)
+View the customer's information.
 #### 4.4. Edit Robot Info
 ##### 4.4.1. Edit Robot Model
 Edit Robot's Model
@@ -67,9 +69,13 @@ Edit Robot's Model
 Create the new robot model. 
 ###### 4.4.1.2. Delete (Robot Model)
 Delete the robot model. 
+###### 4.4.1.3. View (Robot Model)
+View the robot model. 
 ###### 4.4.2. Edit Robot Software
 Edit the Robot's software
 ###### 4.4.2.1. Create (Robot Software)
 Create the new robot's software. 
 ###### 4.4.2.2. Delete (Robot Software)
 Delete the robot's software. 
+###### 4.4.2.3. View (Robot Software)
+View the robot's software. 
