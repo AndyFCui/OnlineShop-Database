@@ -521,6 +521,8 @@ class DatabaseConnection:
         print('->[6] Back Main Menu                      #')
         print('###########################################')
 
+        self.storage_select()
+
     def storage_select(self):
         user_select = input('->')
         match user_select:
