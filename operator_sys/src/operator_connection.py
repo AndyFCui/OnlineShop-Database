@@ -336,7 +336,6 @@ class DatabaseConnection:
     """
     This function is work for customer options.
     """
-
     def customer_info_options(self):
         print('Please Enter Number To Select Options:')
         user_select = input('->')
@@ -399,7 +398,7 @@ class DatabaseConnection:
     def create_add_card(self):
         print('Please Enter Customer Credit Card')
         c_name = input('Customer Name:')
-        c_card = input('Credit Card:')
+        c_card = input('Credit Card No:')
         print('Card Type: VISA/Master/AmericaExpress/Discover')
         c_card_type = input('Card Type:')
         expire_date = input('Expire Date(YYYY-MM-DD):')
