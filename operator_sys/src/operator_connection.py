@@ -353,10 +353,43 @@ class DatabaseConnection:
                 self.create_add_card()
                 self.edit_customer_info()
             case '5':
+                self.cus_view()
+            case '6':
                 self.management_list()
+            case '7':
+                self.control_panel()
             case _:
                 print('Error Select, Please Select Again.')
                 self.edit_customer_info()
+
+    def cus_view(self):
+        print('Please Enter Info Of Customer To View:')
+        c_name = input('Customer Name:')
+
+        # Create a new cursor for the result set
+        result_cursor = self.cnx.cursor()
+
+        try:
+            # Call the stored procedure
+            result_cursor.callproc('view_customer', [c_name])
+
+            # Fetch the result and print it
+            print(f"Customer Information for '{c_name}':")
+            for result in result_cursor.stored_results():
+                rows = result.fetchall()
+                if len(rows) == 0:
+                    print("No customer with the given name found.")
+                else:
+                    for row in rows:
+                        print(row)
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            # Close the result cursor
+            result_cursor.close()
 
     def update_cus_info(self):
         print('Please Enter Request Update Customer Information:')
