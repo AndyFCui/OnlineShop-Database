@@ -19,10 +19,9 @@ DELIMITER ;
 
 -- Test
 # CALL default_account();
-
-SELECT user, host FROM mysql.user;
-SELECT * FROM Operator;
-DROP USER 'test'@'localhost';
+-- SELECT user, host FROM mysql.user;
+-- SELECT * FROM Operator;
+-- DROP USER 'test'@'localhost';
 
 
 /*
@@ -136,8 +135,8 @@ END$$
 DELIMITER ;
 -- ##################################################
 
-
-CALL delete_account_by_operator_id(0);
+-- Test
+-- CALL delete_account_by_operator_id(0);
 
 -- CALL create_account('andy', '123123')
 -- SHOW GRANTS FOR 'test'@'localhost';
@@ -274,8 +273,8 @@ BEGIN
 		SIGNAL SQLSTATE '60000' SET MESSAGE_TEXT = 'There is no such operator';
 	ELSE
 		UPDATE operator SET user_id = new_user_id WHERE name = operator_name LIMIT 1;
-        SELECT user_id FROM operator WHERE name = 'operator_name' INTO sys_user_id;
-        UPDATE mysql.user SET User = new_user_id WHERE User = 'sys_user_id';
+        SELECT user_id FROM operator WHERE name = operator_name INTO sys_user_id;
+        UPDATE mysql.user SET User = new_user_id WHERE User = sys_user_id;
         FLUSH PRIVILEGES;
     END IF;
 END//
@@ -302,9 +301,12 @@ BEGIN
     IF indicate_operator = 0 THEN
 		SIGNAL SQLSTATE '60000' SET MESSAGE_TEXT = 'There is no such operator';
 	ELSE
-		UPDATE operator SET user_password = new_user_password WHERE name = operator_name LIMIT 1;
-        SELECT user_id FROM operator WHERE name = 'operator_name' INTO sys_user_id;
-        UPDATE mysql.user SET Password = PASSWORD(new_user_password) WHERE User = 'sys_user_id';
+		UPDATE operator SET user_password = new_user_password WHERE name = operator_name;
+        SELECT user_id FROM operator WHERE name = operator_name INTO sys_user_id;
+		SET @sql = CONCAT('SET PASSWORD FOR "', sys_user_id, '"@"localhost" = PASSWORD("', new_user_password, '")');
+		PREPARE stmt FROM @sql;
+		EXECUTE stmt;
+		DEALLOCATE PREPARE stmt;
         FLUSH PRIVILEGES;
     END IF;
 END//
@@ -326,4 +328,4 @@ BEGIN
     WHERE name = in_name;
 END//
 -- TEST
-CALL view_operator('tom');
+-- CALL view_operator('tom');
