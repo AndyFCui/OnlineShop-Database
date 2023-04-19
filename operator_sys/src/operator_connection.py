@@ -207,9 +207,8 @@ class DatabaseConnection:
         print('->[1] Refund                              #')
         print('->[2] Refund & Return Product             #')
         print('->[3] Exchange                            #')
-        print('->[4] Return Pre Menu                     #')
-        print('->[5] Back Last Menu                      #')
-        print('->[6] Back Main Menu                      #')
+        print('->[4] Back Last Menu                      #')
+        print('->[5] Back Main Menu                      #')
         print('###########################################')
 
     def order_options(self):
@@ -217,20 +216,108 @@ class DatabaseConnection:
         user_select = input('->')
         match user_select:
             case '1':
-                user_select = 'Refund'
+                self.refund()
+                self.order_list()
+                self.order_options()
             case '2':
-                user_select = 'Refund & Return Product'
+                self.refund_and_products()
+                self.order_list()
+                self.order_options()
             case '3':
-                user_select = 'Exchange'
+                self.exchange()
+                self.order_list()
+                self.order_options()
             case '4':
-                user_select = 'Return Pre Menu'
+                self.control_panel()
+                self.control_panel_function()
+            case '5':
+                self.control_panel()
+                self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
+                self.order_list()
+                self.order_options()
 
-    def return_order(self):
-        self.order_list()
-        self.order_options()
-        # TO DO Procedure
+    def refund(self):
+        print('Please Enter Request Return Order Information:')
+        return_order_id = input('Order ID:')
+        return_goods_id = input('Goods ID:')
+
+        # Create a new cursor for the result set
+        result_cursor = self.cnx.cursor()
+
+        try:
+            result_cursor.callproc('return_payment', [
+                return_order_id,
+                return_goods_id,
+                None
+            ])
+
+            # Fetch the OUT parameter value
+            for result in result_cursor.stored_results():
+                out_message = result.fetchone()[0]
+
+            self.cnx.commit()
+
+            print(f"Message: {out_message}")
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            result_cursor.close()
+
+    def refund_and_products(self):
+        print('Please Enter Request Return Order Information:')
+        return_order_id = input('Order ID:')
+        return_goods_id = input('Goods ID:')
+
+        # Create a new cursor for the result set
+        result_cursor = self.cnx.cursor()
+
+        try:
+            result_cursor.callproc('return_payment_and_goods', [
+                return_order_id,
+                return_goods_id,
+                None
+            ])
+
+            # Fetch the OUT parameter value
+            for result in result_cursor.stored_results():
+                out_message = result.fetchone()[0]
+
+            self.cnx.commit()
+
+            print(f"Message: {out_message}")
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            result_cursor.close()
+
+    def exchange(self):
+        print('Please Enter Request Return Order Information:')
+        return_order_id = input('Order ID:')
+        return_goods_id = input('Goods ID:')
+
+        # Create a new cursor for the result set
+        result_cursor = self.cnx.cursor()
+
+        try:
+            result_cursor.callproc('return_exchange', [
+                return_order_id,
+                return_goods_id,
+                None
+            ])
+
+            # Fetch the OUT parameter value
+            for result in result_cursor.stored_results():
+                out_message = result.fetchone()[0]
+
+            self.cnx.commit()
+
+            print(f"Message: {out_message}")
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            result_cursor.close()
 
     @staticmethod
     def management_list():
@@ -258,6 +345,7 @@ class DatabaseConnection:
         print('->[6] Back Last Menu                      #')
         print('->[7] Back Main Menu                      #')
         print('###########################################')
+
         self.customer_info_options()
 
 
