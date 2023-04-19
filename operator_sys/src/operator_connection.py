@@ -354,6 +354,7 @@ class DatabaseConnection:
                 self.edit_customer_info()
             case '5':
                 self.cus_view()
+                self.edit_customer_info()
             case '6':
                 self.management_list()
             case '7':
@@ -361,6 +362,25 @@ class DatabaseConnection:
             case _:
                 print('Error Select, Please Select Again.')
                 self.edit_customer_info()
+
+    def create_add_card(self):
+        print('Please Enter Customer Credit Card')
+        c_name = input('Customer Name:')
+        c_card = input('Credit Card:')
+        print('Card Type: VISA/Master/AmericaExpress/Discover')
+        c_card_type = input('Card Type:')
+        expire_date = input('Expire Date:')
+        try:
+            self.cur.callproc('insert_credit_card', [
+                c_name,
+                c_card,
+                c_card_type,
+                expire_date
+            ])
+            self.cnx.commit()
+            print("Credit Card information created successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def cus_view(self):
         print('Please Enter Info Of Customer To View:')
@@ -434,7 +454,7 @@ class DatabaseConnection:
         customer_id = input('Customer ID:')
 
         try:
-            self.cur.callproc('del_customer', [customer_id])
+            self.cur.callproc('delete_customer', [customer_id])
             self.cnx.commit()
             print("Customer information deleted successfully.")
         except Exception as e:
