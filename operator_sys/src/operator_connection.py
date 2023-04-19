@@ -325,7 +325,8 @@ class DatabaseConnection:
         print('->[2] Update                              #')
         print('->[3] Delete                              #')
         print('->[4] Add Card                            #')
-        print('->[5] View                                #')
+        print('->[5] View Card                           #')
+        print('->[6] View Customer                       #')
         print('->[6] Back Last Menu                      #')
         print('->[7] Back Main Menu                      #')
         print('###########################################')
@@ -353,15 +354,47 @@ class DatabaseConnection:
                 self.create_add_card()
                 self.edit_customer_info()
             case '5':
-                self.cus_view()
+                self.view_card()
                 self.edit_customer_info()
             case '6':
-                self.management_list()
+                self.cus_view()
+                self.edit_customer_info()
             case '7':
+                self.management_list()
+            case '8':
                 self.control_panel()
             case _:
                 print('Error Select, Please Select Again.')
                 self.edit_customer_info()
+
+    def view_card(self):
+        print('Please Enter Card Holder Name:')
+        c_name = input('Holder Name(Customer Name):')
+
+        # Create a new cursor for the result set
+        result_cursor = self.cnx.cursor()
+
+        try:
+            # Call the stored procedure
+            result_cursor.callproc('view_card', [c_name])
+
+            # Fetch the result and print it
+            print(f"Credit Card Information for '{c_name}':")
+            for result in result_cursor.stored_results():
+                rows = result.fetchall()
+                if len(rows) == 0:
+                    print("No credit cards found for the given customer name.")
+                else:
+                    for row in rows:
+                        print(row)
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            # Close the result cursor
+            result_cursor.close()
 
     def create_add_card(self):
         print('Please Enter Customer Credit Card')
@@ -369,7 +402,7 @@ class DatabaseConnection:
         c_card = input('Credit Card:')
         print('Card Type: VISA/Master/AmericaExpress/Discover')
         c_card_type = input('Card Type:')
-        expire_date = input('Expire Date:')
+        expire_date = input('Expire Date(YYYY-MM-DD):')
         try:
             self.cur.callproc('insert_credit_card', [
                 c_name,
@@ -386,30 +419,30 @@ class DatabaseConnection:
         print('Please Enter Info Of Customer To View:')
         c_name = input('Customer Name:')
 
-        # Create a new cursor for the result set
-        result_cursor = self.cnx.cursor()
-
         try:
             # Call the stored procedure
-            result_cursor.callproc('view_customer', [c_name])
+            self.cur.callproc('view_customer', [c_name])
 
             # Fetch the result and print it
-            print(f"Customer Information for '{c_name}':")
-            for result in result_cursor.stored_results():
-                rows = result.fetchall()
-                if len(rows) == 0:
-                    print("No customer with the given name found.")
-                else:
-                    for row in rows:
-                        print(row)
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print(f"No customer with the name '{c_name}' found.")
+            else:
+                # Get the column names
+                column_names = [desc[0] for desc in self.cur.description]
 
+                print(f"Customer Information for '{c_name}':")
+                print('--------------------------------------------------')
+                for row in rows:
+                    row_dict = {column_name: value for column_name, value in zip(column_names, row.values())}
+                    for key, value in row_dict.items():
+                        print(f"{key}: {value}")
+                    print()
+                print('--------------------------------------------------')
             # Commit the transaction
             self.cnx.commit()
         except Exception as e:
             print(f"Error: {e}")
-        finally:
-            # Close the result cursor
-            result_cursor.close()
 
     def update_cus_info(self):
         print('Please Enter Request Update Customer Information:')
