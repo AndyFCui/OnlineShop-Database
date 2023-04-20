@@ -28,11 +28,9 @@ END//
 DELIMITER ;
 -- TEST 
 -- DELIMITER  //
--- SET @message = 'None';
 -- -- CALL order_create('2023-04-15', 'Order', 'regular', 1, 'Tom');
 -- -- CALL order_fill(2, 3000, 500);
--- CALL return_payment(1, 4000, @message);
--- SELECT @message;
+-- CALL return_payment(1, 4000);
 -- SELECT * FROM order_detail;
 -- SELECT * FROM robot_order//
 -- DELIMITER ;
