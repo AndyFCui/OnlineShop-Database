@@ -327,8 +327,8 @@ class DatabaseConnection:
         print('->[4] Add Card                            #')
         print('->[5] View Card                           #')
         print('->[6] View Customer                       #')
-        print('->[6] Back Last Menu                      #')
-        print('->[7] Back Main Menu                      #')
+        print('->[7] Back Last Menu                      #')
+        print('->[8] Back Main Menu                      #')
         print('###########################################')
 
         self.customer_info_options()
@@ -511,8 +511,9 @@ class DatabaseConnection:
         print('###########################################')
         print('->[1] Create Robot Model                  #')
         print('->[2] Delete Robot Model                  #')
-        print('->[3] Back Last Menu                      #')
-        print('->[4] Back Main Menu                      #')
+        print('->[3] View Robot Model                    #')
+        print('->[4] Back Last Menu                      #')
+        print('->[5] Back Main Menu                      #')
         print('###########################################')
 
         self.edit_model_options()
@@ -523,18 +524,48 @@ class DatabaseConnection:
         match user_select:
             case '1':
                 self.create_model()
+                self.edit_model_list()
             case '2':
                 self.delete_model()
+                self.edit_model_list()
             case '3':
-                self.edit_robot_info_list()
-                self.edit_robot_select()
+                self.view_model()
+                self.edit_model_list()
             case '4':
+                self.edit_robot_info_list()
+            case '5':
                 self.control_panel()
-                self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
                 self.edit_model_list()
-                self.edit_model_options()
+
+    def view_model(self):
+        print('Please Enter Model Of Robot:')
+        m_name = input('Model Name:')
+
+        try:
+            # Call the stored procedure
+            self.cur.callproc('view_model', [m_name])
+
+            # Fetch the result and print it
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print(f"No model found for the given Model Name '{m_name}'.")
+            else:
+                # Get the column names
+                column_names = [desc[0] for desc in self.cur.description]
+
+                print(f"Model Information for Model Name '{m_name}':")
+                for row in rows:
+                    row_dict = {column_name: value for column_name, value in zip(column_names, row.values())}
+                    for key, value in row_dict.items():
+                        print(f"{key}: {value}")
+                    print()
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
 
     def create_model(self):
         print('Please Enter Robot Information:')
@@ -588,8 +619,9 @@ class DatabaseConnection:
         print('###########################################')
         print('->[1] Create Robot Software               #')
         print('->[2] Delete Robot Software               #')
-        print('->[3] Back Last Menu                      #')
-        print('->[4] Back Main Menu                      #')
+        print('->[3] View Robot Software                 #')
+        print('->[4] Back Last Menu                      #')
+        print('->[5] Back Main Menu                      #')
         print('###########################################')
 
         self.edit_software_options()
@@ -600,18 +632,48 @@ class DatabaseConnection:
         match user_select:
             case '1':
                 self.create_software()
+                self.edit_software_list()
             case '2':
                 self.delete_software()
+                self.edit_software_list()
             case '3':
-                self.edit_robot_info_list()
-                self.edit_robot_select()
+                self.software_view()
+                self.edit_software_list()
             case '4':
+                self.edit_robot_info_list()
+            case '5':
                 self.control_panel()
-                self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
                 self.edit_software_list()
-                self.edit_software_options()
+
+    def software_view(self):
+        print('Please Enter Software Info:')
+        ed_software = input('Software Edition:')
+
+        try:
+            # Call the stored procedure
+            self.cur.callproc('view_software', [ed_software])
+
+            # Fetch the result and print it
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print(f"No software found for the given Software Edition '{ed_software}'.")
+            else:
+                # Get the column names
+                column_names = [desc[0] for desc in self.cur.description]
+
+                print(f"Software Information for Software Edition '{ed_software}':")
+                for row in rows:
+                    row_dict = {column_name: value for column_name, value in zip(column_names, row.values())}
+                    for key, value in row_dict.items():
+                        print(f"{key}: {value}")
+                    print()
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
 
     def create_software(self):
         print('Please Enter Robot Software Information:')
@@ -782,7 +844,32 @@ class DatabaseConnection:
             print(f"Error: {e}")
 
     def goods_view(self):
-        print('To Do Later')
+        print('Please Enter Goods Info To View:')
+        g_id = input('Goods ID:')
+
+        try:
+            # Call the stored procedure
+            self.cur.callproc('view_goods', [g_id])
+
+            # Fetch the result and print it
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print(f"No goods found for the given Goods ID '{g_id}'.")
+            else:
+                # Get the column names
+                column_names = [desc[0] for desc in self.cur.description]
+
+                print(f"Goods Information for Goods ID '{g_id}':")
+                for row in rows:
+                    row_dict = {column_name: value for column_name, value in zip(column_names, row.values())}
+                    for key, value in row_dict.items():
+                        print(f"{key}: {value}")
+                    print()
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
 
     def edit_operator_list(self):
         print('###########################################')
