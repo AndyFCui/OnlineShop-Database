@@ -1,8 +1,8 @@
 # OnlineShop-Database
- This is online shop database
-Robot Store Management System
-Canvas group: LiuSCuiX
-Group member
+# This is online shop database
+# Robot Store Management System
+# Group name: LiuSCuiX
+# Group member
 Shuhao Liu, Xiangyu Cui
 Top level description
 Introduction
