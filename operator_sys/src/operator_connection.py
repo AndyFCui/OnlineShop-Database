@@ -930,7 +930,7 @@ class DatabaseConnection:
         print('##-- Storage Management  --##')
         print('###########################################')
         print('->[1] Operator Update                     #')
-        print('->[2] Operator Logoff                     #')
+        print('->[2] Operator Delete                     #')
         print('->[3] Operator View                       #')
         print('->[4] Back Last Menu                      #')
         print('->[5] Back Main Menu                      #')
@@ -945,7 +945,7 @@ class DatabaseConnection:
                 self.operator_update_list()
                 self.edit_operator_list()
             case '2':
-                self.operator_logoff()
+                self.operator_del()
                 self.edit_operator_list()
             case '3':
                 self.operator_view()
@@ -988,16 +988,16 @@ class DatabaseConnection:
         except Exception as e:
             print(f"Error: {e}")
 
-    def operator_logoff(self):
-        print('Please Enter Operator Information:')
+    def operator_del(self):
+        print('Please Enter Request Delete Operator Information:')
         operator_id = input('Operator ID:')
 
         try:
-            self.cur.callproc('update_operator_name', [
+            self.cur.callproc('delete_account_by_user_id', [
                 operator_id
             ])
             self.cnx.commit()
-            print("Operator logged off successfully.")
+            print("Operator Deleted successfully.")
         except Exception as e:
             print(f"Error: {e}")
 
