@@ -397,7 +397,7 @@ class DatabaseConnection:
                 self.create_cus_info()
                 self.edit_customer_info()
             case '2':
-                self.update_cus_info()
+                self.update_customer_info_list()
                 self.edit_customer_info()
             case '3':
                 self.del_cus_info()
@@ -414,6 +414,41 @@ class DatabaseConnection:
             case '7':
                 self.management_list()
             case '8':
+                self.control_panel()
+            case _:
+                print('Error Select, Please Select Again.')
+                self.edit_customer_info()
+
+    def update_customer_info_list(self):
+        print('###########################################')
+        print('##-- Robot Sale Sys Management Panel  --##')
+        print('##-- Update Customer Info  --##')
+        print('###########################################')
+        print('->[1] Update Customer Name                #')
+        print('->[2] Update Customer Address             #')
+        print('->[3] Update Customer Phone Number        #')
+        print('->[4] Back Last Menu                      #')
+        print('->[5] Back Main Menu                      #')
+        print('###########################################')
+
+        self.update_customer_info_options()
+
+    def update_customer_info_options(self):
+        print('Please Enter Number To Select Options:')
+        user_select = input('->')
+        match user_select:
+            case '1':
+                self.update_cus_name()
+                self.update_customer_info_list()
+            case '2':
+                self.update_cus_addr()
+                self.update_customer_info_list()
+            case '3':
+                self.update_cus_cell()
+                self.update_customer_info_list()
+            case '4':
+                self.management_list()
+            case '5':
                 self.control_panel()
             case _:
                 print('Error Select, Please Select Again.')
@@ -495,7 +530,37 @@ class DatabaseConnection:
         except Exception as e:
             print(f"Error: {e}")
 
-    def update_cus_info(self):
+    def update_cus_addr(self):
+        print('Please Enter Request Update Customer Information:')
+        cus_name = input('Customer Name:')
+        cus_addr_new = input('Customer New Address:')
+
+        try:
+            self.cur.callproc('update_customer_address', [
+                cus_name,
+                cus_addr_new
+            ])
+            self.cnx.commit()
+            print("Customer information updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def update_cus_cell(self):
+        print('Please Enter Request Update Customer Information:')
+        cus_name = input('Customer Name:')
+        cus_cell_new = input('Customer New Phone Number:')
+
+        try:
+            self.cur.callproc('update_customer_phone_number', [
+                cus_name,
+                cus_cell_new
+            ])
+            self.cnx.commit()
+            print("Customer information updated successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def update_cus_name(self):
         print('Please Enter Request Update Customer Information:')
         cus_name = input('Customer Name:')
         cus_name_new = input('Customer New Name:')
