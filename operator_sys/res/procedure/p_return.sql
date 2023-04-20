@@ -5,11 +5,11 @@ DROP PROCEDURE IF EXISTS return_payment;
 DELIMITER  //
 CREATE PROCEDURE return_payment(
 	IN return_order_id int,
-    IN return_goods_id int,
-    OUT message varchar(50)
+    IN return_goods_id int
 )
 BEGIN
 	DECLARE nowdate, buy_date date;
+    DECLARE message varchar(50);
     DECLARE gap int;
     SELECT CURDATE() into nowdate;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
@@ -43,11 +43,11 @@ DROP PROCEDURE IF EXISTS return_payment_and_goods;
 DELIMITER  //
 CREATE PROCEDURE return_payment_and_goods(
 	IN return_order_id int,
-    IN return_goods_id int,
-    OUT message varchar(50)
+    IN return_goods_id int
 )
 BEGIN
 	DECLARE nowdate, buy_date date;
+	DECLARE message varchar(50);
     DECLARE gap int;
     SELECT CURDATE() into nowdate;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
@@ -76,11 +76,11 @@ DROP PROCEDURE IF EXISTS return_exchange;
 DELIMITER  //
 CREATE PROCEDURE return_exchange(
 	IN return_order_id int,
-    IN return_goods_id int,
-    OUT message varchar(50)
+    IN return_goods_id int
 )
 BEGIN
 	DECLARE nowdate, buy_date date;
+	DECLARE message varchar(50);
     DECLARE gap int;
     SELECT CURDATE() into nowdate;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
