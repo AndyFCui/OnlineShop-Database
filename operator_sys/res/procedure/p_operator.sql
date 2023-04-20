@@ -330,6 +330,7 @@ BEGIN
     FROM operator
     WHERE name = in_name;
 END//
+DELIMITER ;
 -- TEST
 -- CALL view_operator('tom');
 
