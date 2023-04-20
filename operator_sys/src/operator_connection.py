@@ -292,7 +292,7 @@ class DatabaseConnection:
             self.cur.callproc('return_payment', [
                 return_order_id,
                 return_goods_id,
-                '@out_message'
+                'out_message'
             ])
 
             # Execute the SELECT query to retrieve the OUT parameter value
@@ -319,7 +319,7 @@ class DatabaseConnection:
             self.cur.callproc('return_payment_and_goods', [
                 return_order_id,
                 return_goods_id,
-                '@out_message'
+                'out_message'
             ])
 
             # Execute the SELECT query to retrieve the OUT parameter value
@@ -346,7 +346,7 @@ class DatabaseConnection:
             self.cur.callproc('return_exchange', [
                 return_order_id,
                 return_goods_id,
-                '@out_message'
+                'out_message'
             ])
 
             # Execute the SELECT query to retrieve the OUT parameter value
