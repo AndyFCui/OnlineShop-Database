@@ -36,12 +36,12 @@ CREATE PROCEDURE order_fill(
 BEGIN
 	INSERT INTO order_detail(order_id, goods_id, sales_price)
     VALUES (order_id, in_goods_id, sales_price);
-    UPDATE robot SET instock = 'sold' where goods_id = in_goods_id;
+    UPDATE robot SET instock = 'sold' where goods_id = in_goods_id LIMIT 1;
 END//
 DELIMITER ;
 -- TEST
--- CALL order_fill(1, 4000, 500);
--- SELECT sales_price from order_detail where order_id = 1;
+-- CALL order_fill(7, 4000, 500);
+-- SELECT * from order_detail where order_id = 2;
 
 -- View order
 DROP PROCEDURE IF EXISTS view_order;
