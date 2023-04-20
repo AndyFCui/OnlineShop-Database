@@ -17,6 +17,7 @@ BEGIN
     SELECT customer_id FROM customer WHERE name = customer_name into customer_no;
  INSERT INTO robot_order(order_id, order_date, order_status, deliver_preference, operator_id, customer_id)
     VALUES (order_no, order_date, order_status, deliver_preference, operator_id, customer_no);
+    SELECT order_no;
 END//
 DELIMITER ;
 -- TEST
