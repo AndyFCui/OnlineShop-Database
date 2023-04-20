@@ -1,5 +1,4 @@
-# OnlineShop-Database
-This is online shop database  
+# Robot Shop-Database  
 Robot Store Management System  
 Group name: LiuSCuiX  
 Group member  
