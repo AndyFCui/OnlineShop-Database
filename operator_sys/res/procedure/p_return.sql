@@ -54,6 +54,7 @@ BEGIN
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "payment and goods return" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods and payment to return" WHERE order_id = return_order_id;
+	SET message = 'Return request success';
     ELSE
 	UPDATE order_detail SET return_status = "return denied" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "return denied" WHERE order_id = return_order_id;
@@ -85,6 +86,7 @@ BEGIN
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "need to exchange" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods to exchange" WHERE order_id = return_order_id;
+	SET message = 'Return request success';
     ELSE
 	UPDATE order_detail SET return_status = "return denied" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "return denied" WHERE order_id = return_order_id;
