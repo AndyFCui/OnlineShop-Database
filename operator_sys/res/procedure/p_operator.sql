@@ -111,27 +111,33 @@ DELIMITER ;
 -- ##################################################
 -- # Delete account by operator_id                  #
 -- ##################################################
-DROP PROCEDURE IF EXISTS delete_account_by_operator_id;
+DROP PROCEDURE IF EXISTS delete_account_by_user_id;
 
 DELIMITER $$
-CREATE PROCEDURE delete_account_by_operator_id(IN target_operator_id INT)
+CREATE PROCEDURE delete_account_by_user_id(IN user_id VARCHAR(50))
 BEGIN
-    -- Find the corresponding user_id
-    DECLARE target_user_id VARCHAR(50);
-    SELECT user_id INTO target_user_id FROM Operator WHERE operator_id = target_operator_id;
+    -- Find the corresponding operator_id
+    DECLARE target_operator_id INT;
+    SELECT operator_id INTO target_operator_id FROM Operator WHERE user_id = user_id;
 
     -- Delete the record from the Operator table
     DELETE FROM Operator WHERE operator_id = target_operator_id;
 
+    -- Revoke privileges
+    SET @sql_revoke = CONCAT("REVOKE SELECT, INSERT, UPDATE, DELETE, EXECUTE ON rbstore.* FROM '", user_id, "'@'localhost';");
+    PREPARE stmt_revoke FROM @sql_revoke;
+    EXECUTE stmt_revoke;
+    DEALLOCATE PREPARE stmt_revoke;
+
     -- Drop the user
-    SET @sql = CONCAT(
+    SET @sql_drop = CONCAT(
         "DROP USER '", 
-        target_user_id, 
+        user_id, 
         "'@'localhost';"
         );
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+    PREPARE stmt_drop FROM @sql_drop;
+    EXECUTE stmt_drop;
+    DEALLOCATE PREPARE stmt_drop;
 
     FLUSH PRIVILEGES;
 END$$
@@ -316,8 +322,8 @@ END//
 DELIMITER ;
 -- TEST
 -- CALL update_operator_user_password('tom', 'Lucky');
-SELECT * from operator;
-CALL update_operator_user_password('test', '653232');
+-- SELECT * from operator;
+-- CALL update_operator_user_password('test', '653232');
 
 -- view operator
 DROP PROCEDURE IF EXISTS view_operator;
