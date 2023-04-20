@@ -237,6 +237,14 @@ class DatabaseConnection:
             print(f"Error: {e}")
 
         print(f'Current Added Order ID is: {order_no}')
+        print('Do You Want Keep Shopping.')
+        print('[1]: Yes      [2]: No')
+        user_select = input('->')
+        match user_select:
+            case '1':
+                self.fill_order(order_no)
+            case '2':
+                self.control_panel()
 
     def return_order_list(self):
         print('###########################################')
