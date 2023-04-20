@@ -23,6 +23,7 @@ BEGIN
     UPDATE robot_order SET order_status = "return denied" WHERE order_id = return_order_id;
     SET message = 'Return request expired';
     END IF;
+    SELECT message;
 END//
 DELIMITER ;
 -- TEST 
@@ -59,7 +60,8 @@ BEGIN
 	UPDATE order_detail SET return_status = "return denied" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "return denied" WHERE order_id = return_order_id;
     SET message = 'Return request expired';
-    END IF;    
+    END IF;
+    SELECT message;
 END//
 DELIMITER ;
 -- TEST
@@ -92,6 +94,7 @@ BEGIN
     UPDATE robot_order SET order_status = "return denied" WHERE order_id = return_order_id;
     SET message = 'Return request expired';
     END IF;
+    SELECT message;
 END//
 DELIMITER ;
 -- TEST
