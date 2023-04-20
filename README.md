@@ -1,4 +1,4 @@
-# Robot Shop-Database  
+# Robot Shop Database  
 Robot Store Management System  
 Group name: LiuSCuiX  
 Group member  
