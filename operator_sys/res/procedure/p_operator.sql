@@ -335,3 +335,14 @@ END//
 
 -- GRANT EXECUTE ON rbstore.* TO 'test'@'localhost';
 -- SELECT * FROM customer;
+
+-- This is for operator get_it OUT
+DROP PROCEDURE IF EXISTS get_id_for_out;
+DELIMITER //
+CREATE PROCEDURE get_id_for_out(IN operator_name varchar(50))
+BEGIN
+  SELECT operator_id
+  FROM operator
+  WHERE name = operator_name;
+END//
+DELIMITER ;
