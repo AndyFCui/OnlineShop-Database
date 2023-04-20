@@ -292,16 +292,11 @@ class DatabaseConnection:
             self.cur.callproc('return_payment', [
                 return_order_id,
                 return_goods_id,
-                'out_message'
             ])
-
-            # Execute the SELECT query to retrieve the OUT parameter value
-            self.cur.execute("SELECT @out_message AS out_message")
 
             # Fetch the result
             result = self.cur.fetchone()
-            out_message = result['out_message']
-
+            out_message = result['message']
             # Commit the transaction
             self.cnx.commit()
 
@@ -319,15 +314,11 @@ class DatabaseConnection:
             self.cur.callproc('return_payment_and_goods', [
                 return_order_id,
                 return_goods_id,
-                'out_message'
             ])
-
-            # Execute the SELECT query to retrieve the OUT parameter value
-            self.cur.execute("SELECT @out_message AS out_message")
 
             # Fetch the result
             result = self.cur.fetchone()
-            out_message = result['out_message']
+            out_message = result['message']
 
             # Commit the transaction
             self.cnx.commit()
@@ -346,15 +337,11 @@ class DatabaseConnection:
             self.cur.callproc('return_exchange', [
                 return_order_id,
                 return_goods_id,
-                'out_message'
             ])
-
-            # Execute the SELECT query to retrieve the OUT parameter value
-            self.cur.execute("SELECT @out_message AS out_message")
 
             # Fetch the result
             result = self.cur.fetchone()
-            out_message = result['out_message']
+            out_message = result['message']
 
             # Commit the transaction
             self.cnx.commit()
