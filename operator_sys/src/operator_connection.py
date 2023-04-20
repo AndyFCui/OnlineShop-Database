@@ -122,10 +122,11 @@ class DatabaseConnection:
         print('###########################################')
         print('####-- Robot Sale Sys Control Panel  --####')
         print('###########################################')
-        print('->[1] Order                          #')
-        print('->[2] Return Order                        #')
-        print('->[3] Data Management                     #')
-        print('->[4] Exit System                         #')
+        print('->[1] Order                               #')
+        print('->[2] View Order                          #')
+        print('->[3] Return Order                        #')
+        print('->[4] Data Management                     #')
+        print('->[5] Exit System                         #')
         print('###########################################')
 
         self.control_panel_function()
@@ -139,12 +140,14 @@ class DatabaseConnection:
                 self.order()
                 self.control_panel()
             case '2':
-                self.return_order_list()
+                self.view_order()
                 self.control_panel()
             case '3':
-                self.management_list()
+                self.return_order_list()
                 self.control_panel()
             case '4':
+                self.management_list()
+            case '5':
                 self.cur.close()
                 self.cnx.close()
                 exit()
@@ -152,6 +155,34 @@ class DatabaseConnection:
                 print('Error Select, Please Select Again. '
                       '(ONLY [1] [2] and [3] OPTIONS.)')
                 self.control_panel()
+
+    def view_order(self):
+        print('Please Enter Order ID To View Order:')
+        order_id = input('Order ID:')
+
+        try:
+            # Call the stored procedure
+            self.cur.callproc('view_order', [order_id])
+
+            # Fetch the result and print it
+            print(f"Order Information for Order ID '{order_id}':")
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print("No order with the given ID found.")
+            else:
+                for row in rows:
+                    print(f"order_id: {row['order_id']}")
+                    print(f"order_date: {row['order_date']}")
+                    print(f"order_status: {row['order_status']}")
+                    print(f"preference: {row['deliver_preference']}")
+                    print(f"customer_id: {row['operator_id']}")
+                    print(f"operator_id: {row['customer_id']}")
+                    print()
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
 
     def order(self):
         print('Please Enter Order Info:')
@@ -180,10 +211,32 @@ class DatabaseConnection:
                 operator_id,
                 customer_name
             ])
+            result_order_id = self.cur.fetchone()
+            order_id = result_order_id['order_no']
             self.cnx.commit()
             print("Order created successfully.")
         except Exception as e:
             print(f"Error: {e}")
+
+        self.fill_order(order_id)
+
+    def fill_order(self, order_no):
+        print('Please Add Your Product Into Your Shopping Cart:')
+        in_goods_id = input('Goods ID:')
+        price = input('Price:')
+
+        try:
+            self.cur.callproc('order_fill', [
+                order_no,
+                in_goods_id,
+                price
+            ])
+            self.cnx.commit()
+            print("Products add to shopping cart Successfully.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+        print(f'Current Added Order ID is: {order_no}')
 
     def return_order_list(self):
         print('###########################################')
@@ -226,81 +279,81 @@ class DatabaseConnection:
         return_order_id = input('Order ID:')
         return_goods_id = input('Goods ID:')
 
-        # Create a new cursor for the result set
-        result_cursor = self.cnx.cursor()
-
         try:
-            result_cursor.callproc('return_payment', [
+            # Call the stored procedure
+            self.cur.callproc('return_payment', [
                 return_order_id,
                 return_goods_id,
-                None
+                '@out_message'
             ])
 
-            # Fetch the OUT parameter value
-            for result in result_cursor.stored_results():
-                out_message = result.fetchone()[0]
+            # Execute the SELECT query to retrieve the OUT parameter value
+            self.cur.execute("SELECT @out_message AS out_message")
 
+            # Fetch the result
+            result = self.cur.fetchone()
+            out_message = result['out_message']
+
+            # Commit the transaction
             self.cnx.commit()
 
             print(f"Message: {out_message}")
         except Exception as e:
             print(f"Error: {e}")
-        finally:
-            result_cursor.close()
 
     def refund_and_products(self):
         print('Please Enter Request Return Order Information:')
         return_order_id = input('Order ID:')
         return_goods_id = input('Goods ID:')
 
-        # Create a new cursor for the result set
-        result_cursor = self.cnx.cursor()
-
         try:
-            result_cursor.callproc('return_payment_and_goods', [
+            # Call the stored procedure
+            self.cur.callproc('return_payment_and_goods', [
                 return_order_id,
                 return_goods_id,
-                None
+                '@out_message'
             ])
 
-            # Fetch the OUT parameter value
-            for result in result_cursor.stored_results():
-                out_message = result.fetchone()[0]
+            # Execute the SELECT query to retrieve the OUT parameter value
+            self.cur.execute("SELECT @out_message AS out_message")
 
+            # Fetch the result
+            result = self.cur.fetchone()
+            out_message = result['out_message']
+
+            # Commit the transaction
             self.cnx.commit()
 
             print(f"Message: {out_message}")
         except Exception as e:
             print(f"Error: {e}")
-        finally:
-            result_cursor.close()
 
     def exchange(self):
         print('Please Enter Request Return Order Information:')
         return_order_id = input('Order ID:')
         return_goods_id = input('Goods ID:')
 
-        # Create a new cursor for the result set
-        result_cursor = self.cnx.cursor()
-
         try:
-            result_cursor.callproc('return_exchange', [
+            # Call the stored procedure
+            self.cur.callproc('return_exchange', [
                 return_order_id,
                 return_goods_id,
-                None
+                '@out_message'
             ])
 
-            # Fetch the OUT parameter value
-            for result in result_cursor.stored_results():
-                out_message = result.fetchone()[0]
+            # Execute the SELECT query to retrieve the OUT parameter value
+            self.cur.execute("SELECT @out_message AS out_message")
 
+            # Fetch the result
+            result = self.cur.fetchone()
+            out_message = result['out_message']
+
+            # Commit the transaction
             self.cnx.commit()
 
             print(f"Message: {out_message}")
         except Exception as e:
             print(f"Error: {e}")
-        finally:
-            result_cursor.close()
 
     def management_list(self):
         print('###########################################')
@@ -878,8 +931,9 @@ class DatabaseConnection:
         print('###########################################')
         print('->[1] Operator Update                     #')
         print('->[2] Operator Logoff                     #')
-        print('->[3] Back Last Menu                      #')
-        print('->[4] Back Main Menu                      #')
+        print('->[3] Operator View                       #')
+        print('->[4] Back Last Menu                      #')
+        print('->[5] Back Main Menu                      #')
         print('###########################################')
 
         self.edit_operator_select()
@@ -889,16 +943,50 @@ class DatabaseConnection:
         match user_select:
             case '1':
                 self.operator_update_list()
+                self.edit_operator_list()
             case '2':
                 self.operator_logoff()
+                self.edit_operator_list()
             case '3':
-                self.management_list()
-                self.management_options()
+                self.operator_view()
+                self.edit_operator_list()
             case '4':
+                self.management_list()
+            case '5':
                 self.control_panel()
-                self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
+                self.edit_operator_list()
+
+    def operator_view(self):
+        print('Please Enter Operator Info To View:')
+        o_name = input('Operator Name:')
+
+        try:
+            # Call the stored procedure
+            self.cur.callproc('view_operator', [o_name])
+
+            # Fetch the result and print it
+            print(f"Operator Information for Operator Name '{o_name}':")
+            rows = self.cur.fetchall()
+            if len(rows) == 0:
+                print("No operator with the given name found.")
+            else:
+                for row in rows:
+                    print(f"operator_id: {row['operator_id']}")
+                    print(f"operator_name: {row['name']}")
+                    print(f"operator_address: {row['address']}")
+                    print(f"phone_number: {row['phone_number']}")
+                    print(f"legal_sex: {row['legal_sex']}")
+                    print(f"date_of_birth: {row['date_of_birth']}")
+                    print(f"user_id: {row['user_id']}")
+                    print(f"user_password: {row['user_password']}")
+                    print()
+
+            # Commit the transaction
+            self.cnx.commit()
+        except Exception as e:
+            print(f"Error: {e}")
 
     def operator_logoff(self):
         print('Please Enter Operator Information:')
@@ -949,10 +1037,8 @@ class DatabaseConnection:
                 self.operator_update_list()
             case '6':
                 self.management_list()
-                self.management_options()
             case '7':
                 self.control_panel()
-                self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
                 self.operator_update_list()
