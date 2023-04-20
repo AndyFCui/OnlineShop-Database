@@ -15,8 +15,5 @@ We might create a web frame to get the bonus point, it might use Django to build
 Inspiration for topic selection
 All of our group members are interested in technology and science. We did a survey and found the number of robot stores is growing at a fast rate.
 So, we discussed and finally decided to design a management system to help these stores to operate.
-UML
-
-Activity Diagram
 
 
