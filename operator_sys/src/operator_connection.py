@@ -165,10 +165,10 @@ class DatabaseConnection:
 
         customer_name = input('Customer Name:')
 
-        self.cur.execute("SET @operator_id_out = 0")
-        self.cur.callproc('get_id', [self.current_operator, "@operator_id_out"])
-        self.cur.execute("SELECT @operator_id_out")
-        operator_id = self.cur.fetchone()[0]
+        self.cur.callproc('get_id_for_out', [self.current_operator])
+        result = self.cur.fetchone()
+        operator_id = result['operator_id']
+        # print(operator_id)
         self.cnx.commit()
 
         # Call the 'order_create' stored procedure with required parameters
