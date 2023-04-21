@@ -990,10 +990,9 @@ class DatabaseConnection:
         print('##-- Storage Management  --##')
         print('###########################################')
         print('->[1] Operator Update                     #')
-        print('->[2] Operator Delete                     #')
-        print('->[3] Operator View                       #')
-        print('->[4] Back Last Menu                      #')
-        print('->[5] Back Main Menu                      #')
+        print('->[2] Operator View                       #')
+        print('->[3] Back Last Menu                      #')
+        print('->[4] Back Main Menu                      #')
         print('###########################################')
 
         self.edit_operator_select()
@@ -1005,14 +1004,11 @@ class DatabaseConnection:
                 self.operator_update_list()
                 self.edit_operator_list()
             case '2':
-                self.operator_del()
-                self.edit_operator_list()
-            case '3':
                 self.operator_view()
                 self.edit_operator_list()
-            case '4':
+            case '3':
                 self.management_list()
-            case '5':
+            case '4':
                 self.control_panel()
             case _:
                 print('Error Select, Please Select Again.')
@@ -1045,19 +1041,6 @@ class DatabaseConnection:
 
             # Commit the transaction
             self.cnx.commit()
-        except Exception as e:
-            print(f"Error: {e}")
-
-    def operator_del(self):
-        print('Please Enter Request Delete Operator Information:')
-        operator_id = input('Operator ID:')
-
-        try:
-            self.cur.callproc('delete_account_by_user_id', [
-                operator_id
-            ])
-            self.cnx.commit()
-            print("Operator Deleted successfully.")
         except Exception as e:
             print(f"Error: {e}")
 
