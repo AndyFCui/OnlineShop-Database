@@ -69,7 +69,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (100,'Tom','address','123456','male','2222-02-22');
+INSERT INTO `customer` VALUES (100,'Tom','neu','123456','male','2222-02-22'),(150,'Mike','neu','123456','male','2222-02-22');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,6 +99,7 @@ CREATE TABLE `operator` (
 
 LOCK TABLES `operator` WRITE;
 /*!40000 ALTER TABLE `operator` DISABLE KEYS */;
+INSERT INTO `operator` VALUES (1,'test','neu','123123','male','2023-04-20','test','123123');
 /*!40000 ALTER TABLE `operator` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,6 +128,7 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `order_detail` WRITE;
 /*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
+INSERT INTO `order_detail` VALUES (1,101,300,'return denied'),(2,3000,600,'payment return');
 /*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +160,7 @@ CREATE TABLE `robot` (
 
 LOCK TABLES `robot` WRITE;
 /*!40000 ALTER TABLE `robot` DISABLE KEYS */;
-INSERT INTO `robot` VALUES (3000,'instock','2222-02-22','Galaxy 0.1',300,428910),(4000,'sold','2222-02-22','Galaxy 0.1',300,428910);
+INSERT INTO `robot` VALUES (101,'sold','2023-04-20','Galaxy 0.1',500,428910),(102,'instock','2023-04-20','Galaxy 0.1',500,428910),(3000,'sold','2222-02-22','Galaxy 0.1',300,428910),(4000,'sold','2222-02-22','Galaxy 0.1',300,428910);
 /*!40000 ALTER TABLE `robot` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -214,6 +216,7 @@ CREATE TABLE `robot_order` (
 
 LOCK TABLES `robot_order` WRITE;
 /*!40000 ALTER TABLE `robot_order` DISABLE KEYS */;
+INSERT INTO `robot_order` VALUES (1,'2022-02-22','return denied','Regular Delivery',1,100),(2,'2023-04-20','has goods to return','Regular Delivery',1,100);
 /*!40000 ALTER TABLE `robot_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -834,12 +837,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `return_exchange`(
     IN return_goods_id int
 )
 BEGIN
-	DECLARE nowdate, buy_date date;
+	DECLARE now_date, buy_date date;
 	DECLARE message varchar(50);
     DECLARE gap int;
-    SELECT CURDATE() into nowdate;
+    SELECT CURDATE() into now_date;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
-    SELECT TIMESTAMPDIFF(DAY, nowdate, buy_date) into gap;
+    SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "need to exchange" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods to exchange" WHERE order_id = return_order_id;
@@ -871,12 +874,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `return_payment`(
     IN return_goods_id int
 )
 BEGIN
-	DECLARE nowdate, buy_date date;
+	DECLARE now_date, buy_date date;
     DECLARE message varchar(50);
     DECLARE gap int;
-    SELECT CURDATE() into nowdate;
+    SELECT CURDATE() into now_date;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
-    SELECT TIMESTAMPDIFF(DAY, nowdate, buy_date) into gap;
+    SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "payment return" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods to return" WHERE order_id = return_order_id;
@@ -908,12 +911,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `return_payment_and_goods`(
     IN return_goods_id int
 )
 BEGIN
-	DECLARE nowdate, buy_date date;
+	DECLARE now_date, buy_date date;
 	DECLARE message varchar(50);
     DECLARE gap int;
-    SELECT CURDATE() into nowdate;
+    SELECT CURDATE() into now_date;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
-    SELECT TIMESTAMPDIFF(DAY, nowdate, buy_date) into gap;
+    SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "payment and goods return" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods and payment to return" WHERE order_id = return_order_id;
@@ -1417,4 +1420,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-21  0:24:59
+-- Dump completed on 2023-04-21  2:06:54
