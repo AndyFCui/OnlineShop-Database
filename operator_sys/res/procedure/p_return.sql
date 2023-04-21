@@ -13,7 +13,7 @@ BEGIN
     DECLARE gap int;
     SELECT CURDATE() into nowdate;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
-    SELECT TIMESTAMPDIFF(DAY, nowdate, buy_date) into gap;
+    SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "payment return" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods to return" WHERE order_id = return_order_id;
@@ -49,7 +49,7 @@ BEGIN
     DECLARE gap int;
     SELECT CURDATE() into nowdate;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
-    SELECT TIMESTAMPDIFF(DAY, nowdate, buy_date) into gap;
+    SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "payment and goods return" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods and payment to return" WHERE order_id = return_order_id;
@@ -82,7 +82,7 @@ BEGIN
     DECLARE gap int;
     SELECT CURDATE() into nowdate;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
-    SELECT TIMESTAMPDIFF(DAY, nowdate, buy_date) into gap;
+    SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
     UPDATE order_detail SET return_status = "need to exchange" where order_id = return_order_id and goods_id = return_goods_id;
     UPDATE robot_order SET order_status = "has goods to exchange" WHERE order_id = return_order_id;
