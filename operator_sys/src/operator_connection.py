@@ -67,6 +67,23 @@ class DatabaseConnection:
             print(f"User '{new_user}' created with password '{new_password}'.")
         except Exception as e:
             print(f"Error: {e}")
+            print('Keep Sign Up?')
+            print('[1]: Yes, Keep Sign Up.')
+            print('[2]: Switch To Log In')
+            print('[3]: Exit System.')
+            user_select = input('->')
+            match user_select:
+                case '1':
+                    self.sign_up()
+                case '2':
+                    self.login(self)
+                case '3':
+                    self.cur.close()
+                    self.cnx.close()
+                    exit()
+                case _:
+                    print('Error Select, Please Select Again.')
+                    self.sign_up()
 
         # Close guest account, and prepare to connect new account
         self.status = False
