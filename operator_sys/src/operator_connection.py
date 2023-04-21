@@ -67,7 +67,7 @@ class DatabaseConnection:
             print(f"User '{new_user}' created with password '{new_password}'.")
         except Exception as e:
             print(f"Error: {e}")
-            print('[%s] Already Exist, Please Try Another One.', new_user)
+            print([new_user], 'Already Exist, Please Try Another One.')
             print('Keep Sign Up?')
             print('[1]: Yes, Keep Sign Up.')
             print('[2]: Switch To Log In')
@@ -907,18 +907,20 @@ class DatabaseConnection:
         match user_select:
             case '1':
                 self.goods_add()
+                self.storage_management()
             case '2':
                 self.goods_update()
+                self.storage_management()
             case '3':
                 self.goods_delete()
+                self.storage_management()
             case '4':
                 self.goods_view()
+                self.storage_management()
             case '5':
                 self.management_list()
-                self.management_options()
             case '6':
                 self.control_panel()
-                self.control_panel_function()
             case _:
                 print('Error Select, Please Select Again.')
                 self.storage_select()
