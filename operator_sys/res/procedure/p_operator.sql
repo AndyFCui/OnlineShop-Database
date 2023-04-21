@@ -1,5 +1,3 @@
--- SHOW PROCEDURE STATUS WHERE database() = 'rbstore';
-
 use rbstore;
 ##########################################################################
 -- Create guest acount for creating account
@@ -107,45 +105,7 @@ END//
 DELIMITER ;
 
 
-
 -- ##################################################
--- # Delete account by operator_id                  #
--- ##################################################
-DROP PROCEDURE IF EXISTS delete_account_by_user_id;
-
-DELIMITER $$
-CREATE PROCEDURE delete_account_by_user_id(IN user_id VARCHAR(50))
-BEGIN
-    -- Find the corresponding operator_id
-    DECLARE target_operator_id INT;
-    SELECT operator_id INTO target_operator_id FROM Operator WHERE user_id = user_id;
-
-    -- Delete the record from the Operator table
-    DELETE FROM Operator WHERE operator_id = target_operator_id;
-
-    -- Revoke privileges
-    SET @sql_revoke = CONCAT("REVOKE SELECT, INSERT, UPDATE, DELETE, EXECUTE ON rbstore.* FROM '", user_id, "'@'localhost';");
-    PREPARE stmt_revoke FROM @sql_revoke;
-    EXECUTE stmt_revoke;
-    DEALLOCATE PREPARE stmt_revoke;
-
-    -- Drop the user
-    SET @sql_drop = CONCAT(
-        "DROP USER '", 
-        user_id, 
-        "'@'localhost';"
-        );
-    PREPARE stmt_drop FROM @sql_drop;
-    EXECUTE stmt_drop;
-    DEALLOCATE PREPARE stmt_drop;
-
-    FLUSH PRIVILEGES;
-END$$
-DELIMITER ;
--- ##################################################
-
--- Test
--- CALL delete_account_by_operator_id(0);
 
 -- CALL create_account('andy', '123123')
 -- SHOW GRANTS FOR 'test'@'localhost';
