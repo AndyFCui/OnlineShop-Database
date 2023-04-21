@@ -15,4 +15,31 @@ Inspiration for topic selection
 All of our group members are interested in technology and science. We did a survey and found the number of robot stores is growing at a fast rate.
 So, we discussed and finally decided to design a management system to help these stores to operate.
 
+	The project has the project Handbook, which possesses all the program functions and end user test case. 
+	Github: https://github.com/AndyFCui/OnlineShop-Database 
+	Programming Language: Python, MySQL
+	Python Version: 3.10
+	Python Edition Control: Anaconda
+	Python Package: pymysql
+	MySQL Version: 8.0.33
+	IDE: PyCharm, Workbench
+	Program User Interface: Terminal 
+	MySQL default user: root, your_passwd 
+
+File Folder:
+•	./data: This folder store our pre-saved file information
+•	./operator_sys: this folder store our code and procedure 
+o	res: this folder store our procedure 
+o	src: this folder store our python code
+•	./uml: this folder store our database uml and activity uml
+•	./final report: this file is our final report.
+•	./project demo: this file is our vide to show our project. 
+•	./Self-contained dump file: this file is our SQL dump 
+•	./README: this file is technology requirement. 
+
+	Download:
+	Anaconda: https://www.anaconda.com/ 
+	Pycharm: https://www.jetbrains.com/pycharm/download/#section=windows
+	Mysql: https://www.mysql.com/downloads/
+
 
