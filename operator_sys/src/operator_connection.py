@@ -67,6 +67,7 @@ class DatabaseConnection:
             print(f"User '{new_user}' created with password '{new_password}'.")
         except Exception as e:
             print(f"Error: {e}")
+            print('[%s] Already Exist, Please Try Another One.', new_user)
             print('Keep Sign Up?')
             print('[1]: Yes, Keep Sign Up.')
             print('[2]: Switch To Log In')
