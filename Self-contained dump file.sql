@@ -99,7 +99,6 @@ CREATE TABLE `operator` (
 
 LOCK TABLES `operator` WRITE;
 /*!40000 ALTER TABLE `operator` DISABLE KEYS */;
-INSERT INTO `operator` VALUES (2,'tom','neu','123123','Male','2023-02-16','tom','123123');
 /*!40000 ALTER TABLE `operator` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1418,4 +1417,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-21  0:20:44
+-- Dump completed on 2023-04-21  0:24:59
