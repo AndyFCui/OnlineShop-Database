@@ -8,10 +8,10 @@ CREATE PROCEDURE return_payment(
     IN return_goods_id int
 )
 BEGIN
-	DECLARE nowdate, buy_date date;
+	DECLARE now_date, buy_date date;
     DECLARE message varchar(50);
     DECLARE gap int;
-    SELECT CURDATE() into nowdate;
+    SELECT CURDATE() into now_date;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
     SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
@@ -44,10 +44,10 @@ CREATE PROCEDURE return_payment_and_goods(
     IN return_goods_id int
 )
 BEGIN
-	DECLARE nowdate, buy_date date;
+	DECLARE now_date, buy_date date;
 	DECLARE message varchar(50);
     DECLARE gap int;
-    SELECT CURDATE() into nowdate;
+    SELECT CURDATE() into now_date;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
     SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
@@ -77,10 +77,10 @@ CREATE PROCEDURE return_exchange(
     IN return_goods_id int
 )
 BEGIN
-	DECLARE nowdate, buy_date date;
+	DECLARE now_date, buy_date date;
 	DECLARE message varchar(50);
     DECLARE gap int;
-    SELECT CURDATE() into nowdate;
+    SELECT CURDATE() into now_date;
     SELECT order_date from robot_order where order_id = return_order_id into buy_date;
     SELECT TIMESTAMPDIFF(DAY, buy_date, now_date) into gap;
     IF gap <16 THEN
