@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `rbstore` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `rbstore`;
--- MySQL dump 10.13  Distrib 8.0.28, for macos11 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: rbstore
 -- ------------------------------------------------------
--- Server version	8.0.28
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -99,7 +99,7 @@ CREATE TABLE `operator` (
 
 LOCK TABLES `operator` WRITE;
 /*!40000 ALTER TABLE `operator` DISABLE KEYS */;
-INSERT INTO `operator` VALUES (1,'tom','neu','123123','male','2023-02-16','tom','123123'),(2,'tom','neu','123123','Male','2023-02-16','tom','123123'),(3,'test','neu','123123','male','2023-04-19','test','123123');
+INSERT INTO `operator` VALUES (2,'tom','neu','123123','Male','2023-02-16','tom','123123');
 /*!40000 ALTER TABLE `operator` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -128,7 +128,6 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `order_detail` WRITE;
 /*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
-INSERT INTO `order_detail` VALUES (1,4000,500,'return denied'),(2,4000,500,'None'),(3,4000,300,'need to exchange'),(4,4000,390,'None'),(5,3000,500,'None'),(5,4000,400,'None'),(6,4000,500,'None'),(7,4000,500,'None');
 /*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,7 +215,6 @@ CREATE TABLE `robot_order` (
 
 LOCK TABLES `robot_order` WRITE;
 /*!40000 ALTER TABLE `robot_order` DISABLE KEYS */;
-INSERT INTO `robot_order` VALUES (1,'2222-02-22','return denied','regular',1,100),(2,'2023-04-15','Order','regular',1,100),(3,'2022-04-19','has goods to exchange','Regular',3,100),(4,'2022-04-17','Order','regular',3,100),(5,'2022-04-15','Order','Regular',3,100),(6,'2222-02-22','Order','regular',1,100),(7,'2222-02-22','Order','regular',1,100);
 /*!40000 ALTER TABLE `robot_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1420,4 +1418,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-20 20:54:25
+-- Dump completed on 2023-04-21  0:20:44
