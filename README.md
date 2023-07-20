@@ -19,6 +19,13 @@ We might create a web frame to get the bonus point, it might use Django to build
 
 
 
+## UML 
+![Final logic design chart](https://github.com/AndyFCui/DuctorLuctorMVC/assets/10085168/42c72f21-92d0-477f-83ce-d0789ad4f377)
+
+
+## Activity Diagram
+![ActivityDiagram](https://github.com/AndyFCui/DuctorLuctorMVC/assets/10085168/e07d5288-e257-4c58-b652-475daa0c4477)
+
 
 ## Inspiration for topic selection    
 All of our group members are interested in technology and science. We did a survey and found the number of robot stores is growing at a fast rate.
