@@ -2,7 +2,7 @@
 Robot Store Management System  
 Group name: LiuSCuiX  
 Group member  
-Shuhao Liu, Xiangyu Cui  
+Xiangyu Cui, Shuhao Liu  
 Top level description  
 
 ## Introduction  
