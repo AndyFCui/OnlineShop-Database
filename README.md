@@ -12,6 +12,14 @@ We decided to use SQL storage combined with python and this system will be teste
 In the python to database connection programs, we intend to use mysql queries to establish a connection to MySQL and build the database structure. If a form already exists and someone wants to submit a command to the form, we need to return the data. It will use all mysql queries to build an offline version database system.  
 Options function  
 We might create a web frame to get the bonus point, it might use Django to build a web interface, if we have enough time.  
+
+
+## Demo show
+![OnlineRobotDatabase](https://github.com/AndyFCui/DuctorLuctorMVC/assets/10085168/2bbe517c-bac3-4699-851a-1b8b8f309f5a)
+
+
+
+
 ## Inspiration for topic selection    
 All of our group members are interested in technology and science. We did a survey and found the number of robot stores is growing at a fast rate.
 So, we discussed and finally decided to design a management system to help these stores to operate.
