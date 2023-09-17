@@ -57,9 +57,9 @@ So, we discussed and finally decided to design a management system to help these
 
 •	./operator_sys: this folder store our code and procedure 
 
-o	res: this folder store our procedure 
+  o	res: this folder store our procedure 
 
-o	src: this folder store our python code
+  o	src: this folder store our python code
 
 •	./uml: this folder store our database uml and activity uml
 
